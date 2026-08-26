@@ -47,4 +47,3 @@ export async function fetchGatewayHealth(): Promise<HealthStatus> {
   }
 }
 
-export const __PLACEHOLDER_MOBILE_API__ = true;
