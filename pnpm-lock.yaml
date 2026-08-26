@@ -99,15 +99,6 @@ importers:
       '@lieshoucloud/config':
         specifier: workspace:*
         version: link:open/config
-      '@lieshoucloud/industry-edu':
-        specifier: workspace:*
-        version: link:industry/packages/industry-edu
-      '@lieshoucloud/industry-iot':
-        specifier: workspace:*
-        version: link:industry/packages/industry-iot
-      '@lieshoucloud/industry-legal':
-        specifier: workspace:*
-        version: link:industry/packages/industry-legal
       '@types/jest':
         specifier: ^29.5.12
         version: 29.5.14
@@ -142,44 +133,11 @@ importers:
         specifier: 6.0.3
         version: 6.0.3
 
-  industry/packages/industry-edu:
-    devDependencies:
-      '@lieshoucloud/api-client':
-        specifier: workspace:*
-        version: link:../../../open/api-client
-      '@lieshoucloud/types':
-        specifier: workspace:*
-        version: link:../../../open/types
-      typescript:
-        specifier: 5.6.3
-        version: 5.6.3
-
-  industry/packages/industry-iot:
-    devDependencies:
-      '@lieshoucloud/api-client':
-        specifier: workspace:*
-        version: link:../../../open/api-client
-      '@lieshoucloud/types':
-        specifier: workspace:*
-        version: link:../../../open/types
-      typescript:
-        specifier: 5.6.3
-        version: 5.6.3
-
-  industry/packages/industry-legal:
-    devDependencies:
-      '@lieshoucloud/api-client':
-        specifier: workspace:*
-        version: link:../../../open/api-client
-      '@lieshoucloud/types':
-        specifier: workspace:*
-        version: link:../../../open/types
-      typescript:
-        specifier: 5.6.3
-        version: 5.6.3
-
   open/api-client:
     devDependencies:
+      '@lieshoucloud/config':
+        specifier: workspace:*
+        version: link:../config
       openapi-typescript:
         specifier: ^7.4.4
         version: 7.13.0(typescript@5.6.3)
@@ -198,6 +156,9 @@ importers:
       '@eslint/js':
         specifier: ^9.15.0
         version: 9.39.5
+      '@lieshoucloud/config':
+        specifier: workspace:*
+        version: link:../config
       eslint:
         specifier: ^9.15.0
         version: 9.39.5
@@ -238,6 +199,9 @@ importers:
       '@lieshoucloud/api-client':
         specifier: workspace:*
         version: link:../api-client
+      '@lieshoucloud/config':
+        specifier: workspace:*
+        version: link:../config
       '@lieshoucloud/types':
         specifier: workspace:*
         version: link:../types
