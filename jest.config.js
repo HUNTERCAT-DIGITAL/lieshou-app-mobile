@@ -18,6 +18,8 @@ module.exports = {
   },
   // 排除 open/ submodule（开源 packages 的测试由各自仓库/包自行跑，端仓库 jest 不扫）
   testPathIgnorePatterns: ["/node_modules/", "/open/", "/dist/", "/.expo/"],
+  // 排除 industry submodule 树（其内部另挂 open/，避免 jest-haste-map 撞上重复的 @lieshoucloud/* 包）
+  modulePathIgnorePatterns: ["<rootDir>/industry/"],
   // jest-expo preset 默认的 transformIgnorePatterns 漏了 `@react-native+js-polyfills`
   // （pnpm 把包放在 .pnpm/<name>+<ver>/node_modules/，目录名里用 `+` 而不是 `/`）。
   // 用 .pnpm 路径前缀做白名单，让 babel 处理 .pnpm 下所有 react-native 系包。

@@ -2,14 +2,19 @@
  * 工作台配置（端壳模板 · 角色工作台框架）.
  *
  * 每个行业（generic/edu/legal/iot）× 登录角色 → 一组菜单/首页。
- * 主布局 (main)/_layout.tsx 从本配置渲染导航，行业 app 在各自装配中
- * 扩展对应行业的 items（行业包可替换 WORKBENCHES[industry]）。
+ * 主布局 (main)/_layout.tsx 从本配置渲染导航，行业菜单由行业包
+ * （industry-{edu,iot,legal}，经 industry/ submodule 提供）装配
+ * （2026-09 行业版收敛：edu/iot/legal-mobile 已废弃，回迁通用仓）。
  *
  * 角色值对齐后端（admin/auth/user 服务）：
- *   PLATFORM_ADMIN / TENANT_ADMIN / DUTY_OFFICER / 行业角色（EDU_* / LEGAL_* / IOT_* 预留）。
+ *   PLATFORM_ADMIN / TENANT_ADMIN / DUTY_OFFICER / 行业角色（EDU_* / LEGAL_* / IOT_*）。
  * item.roles 缺省 = 全部登录用户可见。
  */
 import type { IndustryId } from "./industry";
+
+import { EDU_WORKBENCH_ITEMS } from "@lieshoucloud/industry-edu";
+import { IOT_WORKBENCH_ITEMS } from "@lieshoucloud/industry-iot";
+import { LEGAL_WORKBENCH_ITEMS } from "@lieshoucloud/industry-legal";
 
 export interface WorkbenchItem {
   /** 对应 Expo Router 文件路由名（Tabs.Screen name） */
@@ -44,32 +49,49 @@ const GENERIC_WORKBENCH: Workbench = {
   ],
 };
 
-/** 行业工作台：行业 app 装配点（edu/legal/iot 由行业包扩展，先继承通用） */
+/**
+ * 端侧已实现路由的行业菜单 key（行业包工作台数据裁剪点）.
+ * 行业包 WORKBENCH_ITEMS 含规划态条目（师资/签到/拓扑/日程等尚无页面），
+ * 只装配已实现的路由，避免 Tabs.Screen 引用不存在的路由导致崩溃。
+ */
+const IMPLEMENTED_KEYS: Record<"edu" | "iot" | "legal", string[]> = {
+  edu: ["index", "edu/courses", "edu/lessons", "edu/children"],
+  iot: ["index", "iot/devices", "iot/alerts", "iot/overview"],
+  legal: ["index", "legal/time"],
+};
+
+/** 从行业包工作台数据挑选已实现条目（保留角色白名单） */
+function pickItems(
+  industry: keyof typeof IMPLEMENTED_KEYS,
+  source: WorkbenchItem[],
+): WorkbenchItem[] {
+  const allowed = IMPLEMENTED_KEYS[industry];
+  return source.filter((it) => allowed.includes(it.key));
+}
+
+/** 教育行业工作台（industry-edu 装配：课程/课时/孩子进度 × 三角色） */
 const EDU_WORKBENCH: Workbench = {
   industry: "edu",
   home: "/",
-  items: [
-    { key: "index", title: "工作台", icon: "📊", href: "/" },
-    // 学生/家长/老师三角色工作台：行业包装配（edu-mobile）时扩展
-  ],
+  items: pickItems("edu", EDU_WORKBENCH_ITEMS),
 };
 
+/** 物联网行业工作台（industry-iot 装配：设备/告警/总览） */
+const IOT_WORKBENCH: Workbench = {
+  industry: "iot",
+  home: "/",
+  items: pickItems("iot", IOT_WORKBENCH_ITEMS),
+};
+
+/** 法律行业工作台（案件复用通用仓 /legal；计时来自 industry-legal） */
 const LEGAL_WORKBENCH: Workbench = {
   industry: "legal",
   home: "/",
   items: [
     { key: "index", title: "工作台", icon: "📊", href: "/" },
+    // 案件管理：复用通用仓 /legal（mobile 本地实现，后端契约 ADR-0036/0045 对齐）
     { key: "legal", title: "案件", icon: "⚖️", href: "/legal" },
-    // 律师/助理：行业包装配（legal-mobile）时扩展（日程/时间记录等）
-  ],
-};
-
-const IOT_WORKBENCH: Workbench = {
-  industry: "iot",
-  home: "/",
-  items: [
-    { key: "index", title: "工作台", icon: "📊", href: "/" },
-    // 运维值班/客户看板：行业包装配（iot-mobile）时扩展（设备/告警/遥测）
+    ...pickItems("legal", LEGAL_WORKBENCH_ITEMS).filter((it) => it.key !== "index"),
   ],
 };
 
