@@ -8,8 +8,10 @@
  * 行业工作台/页面由各行业 app 装配（行业包），端壳只提供装配点与通用能力。
  */
 import Constants from "expo-constants";
+import type { IndustryId } from "@lieshoucloud/types";
 
-export type IndustryId = "generic" | "edu" | "legal" | "iot";
+// IndustryId 契约来自 @lieshoucloud/types（L0 · 客户层与行业层解耦，2026-09）
+export type { IndustryId } from "@lieshoucloud/types";
 
 export interface IndustryMeta {
   id: IndustryId;
