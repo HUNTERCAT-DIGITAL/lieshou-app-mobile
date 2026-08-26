@@ -78,7 +78,7 @@ export default function Profile() {
       <TouchableOpacity style={styles.logoutBtn} onPress={onLogout} testID="logout-btn">
         <Text style={styles.logoutText}>退出登录</Text>
       </TouchableOpacity>
-      <Text style={styles.footer}>LieShou Cloud Mobile · 猎手云 Pro</Text>
+      <Text style={styles.footer}>LieShouCloud Mobile · 开源演示版</Text>
     </ScrollView>
   );
 }
