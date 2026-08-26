@@ -16,10 +16,10 @@ importers:
         version: 57.0.13(@expo/log-box@57.0.3)(expo@57.0.16)(react-dom@19.2.3(react@19.2.3))(react-native@0.86.2(@babel/core@7.29.7)(@react-native/jest-preset@0.86.2(@babel/core@7.29.7)(react@19.2.3))(@react-native/metro-config@0.86.2(@babel/core@7.29.7))(@types/react@19.0.0)(react@19.2.3))(react@19.2.3)
       '@lieshoucloud/api-client':
         specifier: workspace:*
-        version: link:open/packages/api-client
+        version: link:open/api-client
       '@lieshoucloud/types':
         specifier: workspace:*
-        version: link:open/packages/types
+        version: link:open/types
       '@react-native-async-storage/async-storage':
         specifier: 2.2.0
         version: 2.2.0(react-native@0.86.2(@babel/core@7.29.7)(@react-native/jest-preset@0.86.2(@babel/core@7.29.7)(react@19.2.3))(@react-native/metro-config@0.86.2(@babel/core@7.29.7))(@types/react@19.0.0)(react@19.2.3))
@@ -98,7 +98,7 @@ importers:
         version: 7.29.7
       '@lieshoucloud/config':
         specifier: workspace:*
-        version: link:open/packages/config
+        version: link:open/config
       '@lieshoucloud/industry-edu':
         specifier: workspace:*
         version: link:industry/packages/industry-edu
@@ -146,10 +146,10 @@ importers:
     devDependencies:
       '@lieshoucloud/api-client':
         specifier: workspace:*
-        version: link:../../../open/packages/api-client
+        version: link:../../../open/api-client
       '@lieshoucloud/types':
         specifier: workspace:*
-        version: link:../../../open/packages/types
+        version: link:../../../open/types
       typescript:
         specifier: 5.6.3
         version: 5.6.3
@@ -158,10 +158,10 @@ importers:
     devDependencies:
       '@lieshoucloud/api-client':
         specifier: workspace:*
-        version: link:../../../open/packages/api-client
+        version: link:../../../open/api-client
       '@lieshoucloud/types':
         specifier: workspace:*
-        version: link:../../../open/packages/types
+        version: link:../../../open/types
       typescript:
         specifier: 5.6.3
         version: 5.6.3
@@ -170,15 +170,15 @@ importers:
     devDependencies:
       '@lieshoucloud/api-client':
         specifier: workspace:*
-        version: link:../../../open/packages/api-client
+        version: link:../../../open/api-client
       '@lieshoucloud/types':
         specifier: workspace:*
-        version: link:../../../open/packages/types
+        version: link:../../../open/types
       typescript:
         specifier: 5.6.3
         version: 5.6.3
 
-  open/packages/api-client:
+  open/api-client:
     devDependencies:
       openapi-typescript:
         specifier: ^7.4.4
@@ -187,9 +187,9 @@ importers:
         specifier: 5.6.3
         version: 5.6.3
 
-  open/packages/config: {}
+  open/config: {}
 
-  open/packages/types:
+  open/types:
     dependencies:
       dayjs:
         specifier: ^1.11.23
@@ -211,7 +211,7 @@ importers:
         specifier: ^8.15.0
         version: 8.68.0(eslint@9.39.5)(typescript@5.6.3)
 
-  open/packages/ui:
+  open/ui:
     dependencies:
       '@ant-design/icons':
         specifier: ~5.5.1
@@ -235,6 +235,9 @@ importers:
       '@eslint/js':
         specifier: ^9.15.0
         version: 9.39.5
+      '@lieshoucloud/api-client':
+        specifier: workspace:*
+        version: link:../api-client
       '@lieshoucloud/types':
         specifier: workspace:*
         version: link:../types
@@ -262,6 +265,9 @@ importers:
       jsdom:
         specifier: 25.0.1
         version: 25.0.1
+      react-router-dom:
+        specifier: ^7.18.2
+        version: 7.18.2(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       typescript:
         specifier: 5.6.3
         version: 5.6.3
@@ -12054,11 +12060,25 @@ snapshots:
     optionalDependencies:
       '@types/react': 19.0.0
 
+  react-router-dom@7.18.2(react-dom@19.0.0(react@19.0.0))(react@19.0.0):
+    dependencies:
+      react: 19.0.0
+      react-dom: 19.0.0(react@19.0.0)
+      react-router: 7.18.2(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+
   react-router-dom@7.18.2(react-dom@19.2.3(react@19.2.3))(react@19.2.3):
     dependencies:
       react: 19.2.3
       react-dom: 19.2.3(react@19.2.3)
       react-router: 7.18.2(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
+
+  react-router@7.18.2(react-dom@19.0.0(react@19.0.0))(react@19.0.0):
+    dependencies:
+      cookie: 1.1.1
+      react: 19.0.0
+      set-cookie-parser: 2.7.2
+    optionalDependencies:
+      react-dom: 19.0.0(react@19.0.0)
 
   react-router@7.18.2(react-dom@19.2.3(react@19.2.3))(react@19.2.3):
     dependencies:
