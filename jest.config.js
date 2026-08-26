@@ -13,8 +13,8 @@ module.exports = {
   },
   // monorepo + pnpm 符号链接下, 让 Jest 把 workspace 包直接指向源码
   moduleNameMapper: {
-    "^@lieshoucloud/api-client$": "<rootDir>/open/packages/api-client/src",
-    "^@lieshoucloud/types$": "<rootDir>/open/packages/types/src",
+    "^@lieshoucloud/api-client$": "<rootDir>/open/api-client/src",
+    "^@lieshoucloud/types$": "<rootDir>/open/types/src",
   },
   // 排除 open/ submodule（开源 packages 的测试由各自仓库/包自行跑，端仓库 jest 不扫）
   testPathIgnorePatterns: ["/node_modules/", "/open/", "/dist/", "/.expo/"],
