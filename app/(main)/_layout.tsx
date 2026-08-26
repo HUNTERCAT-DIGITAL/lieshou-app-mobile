@@ -19,7 +19,6 @@ import { colors } from "../../src/theme/colors";
 const NON_TAB_SCREENS = [
   "customers/[id]",
   "leads/[id]",
-  "legal/[id]",
   "approval/[id]",
   "profile",
 ];

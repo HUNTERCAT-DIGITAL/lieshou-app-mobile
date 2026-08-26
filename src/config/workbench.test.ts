@@ -8,13 +8,13 @@ describe("workbench · 工作台配置", () => {
     const wb = getWorkbench("generic", []);
     const titles = wb.items.map((i) => i.title);
     expect(titles).toEqual(
-      expect.arrayContaining(["工作台", "客户", "线索", "案件", "库存", "记账", "审批"]),
+      expect.arrayContaining(["工作台", "客户", "线索", "库存", "记账", "审批"]),
     );
   });
 
-  it("行业工作台存在（edu/legal/iot 装配点）", () => {
+  it("行业装配点回退通用工作台（开源版仅 generic）", () => {
     for (const id of ["edu", "legal", "iot"] as const) {
-      expect(WORKBENCHES[id].industry).toBe(id);
+      expect(WORKBENCHES[id].industry).toBe("generic");
     }
   });
 
