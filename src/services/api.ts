@@ -17,7 +17,9 @@ import type { HealthStatus } from "@lieshoucloud/types";
  *  - dev / Expo Go：默认 https://expo.lieshoucloud.huntercat.cn（Metro 代理域名，nginx /api → gateway）
  *  - 正式打包：构建时注入生产域名（EAS environment variable），默认值仅作 dev 兜底
  */
-export const MOBILE_API_BASE = process.env.EXPO_PUBLIC_API_BASE ?? "https://expo.lieshoucloud.huntercat.cn";
+import { resolveApiBase } from '@lieshoucloud/config';
+
+export const MOBILE_API_BASE = resolveApiBase({ defaultBase: 'https://expo.lieshoucloud.huntercat.cn', tool: 'expo' });
 
 /**
  * 配置 api-client baseUrl：
