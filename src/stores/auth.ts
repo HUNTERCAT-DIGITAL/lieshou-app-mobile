@@ -61,7 +61,7 @@ export const useAuthStore = create<AuthState>()(
             user: {
               userId: token.userId,
               username: token.username,
-              roles: ["USER"],
+              roles: [], // 登录响应无 roles；fetchMe() 后填充真实角色（CurrentUser.roles）
               tenantCode: token.tenantCode,
               tenantEdition: token.tenantEdition,
             },

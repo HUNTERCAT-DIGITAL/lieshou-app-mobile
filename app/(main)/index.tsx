@@ -15,6 +15,7 @@ import { listLeads } from "../../src/services/lead";
 import { listProducts, type Product } from "../../src/services/inventory";
 import { EVENTS, track } from "../../src/services/analytics";
 import { useAuthStore } from "../../src/stores/auth";
+import { WorkbenchHeader } from "../../src/components/WorkbenchHeader";
 import { colors } from "../../src/theme/colors";
 
 /** 低库存预警阈值（件） */
@@ -88,6 +89,7 @@ export default function Workbench() {
 
   return (
     <ScrollView style={styles.scroll} refreshControl={<RefreshControl refreshing={loading} onRefresh={load} />}>
+      <WorkbenchHeader />
       <View style={styles.header}>
         <Text style={styles.greeting}>欢迎回来，{user?.username ?? "用户"}</Text>
         <View style={styles.rolesRow}>
