@@ -4,18 +4,28 @@
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "types": ["jest", "node"],
+    "types": [
+      "jest",
+      "node"
+    ],
     "paths": {
-      "@/*": ["./src/*"],
-      "@lieshoucloud/api-client": ["./open/api-client/src"],
-      "@lieshoucloud/types": ["./open/types/src"],
-      "@lieshoucloud/industry-edu": ["./industry/packages/industry-edu/src"],
-      "@lieshoucloud/industry-iot": ["./industry/packages/industry-iot/src"],
-      "@lieshoucloud/industry-legal": ["./industry/packages/industry-legal/src"]
+      "@/*": [
+        "./src/*"
+      ],
+      "@lieshoucloud/api-client": [
+        "./open/api-client/src"
+      ],
+      "@lieshoucloud/types": [
+        "./open/types/src"
+      ]
     }
   },
-  "include": ["**/*.ts", "**/*.tsx", ".expo/types/**/*.ts", "expo-env.d.ts"]
-,
+  "include": [
+    "**/*.ts",
+    "**/*.tsx",
+    ".expo/types/**/*.ts",
+    "expo-env.d.ts"
+  ],
   "exclude": [
     "node_modules",
     "open/*/src/**/*.test.*",
