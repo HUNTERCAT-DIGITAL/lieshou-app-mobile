@@ -1,0 +1,32 @@
+# Expo
+.expo/
+.expo-shared/
+dist/
+web-build/
+expo-env.d.ts
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+*.orig.*
+
+# Metro
+.metro-health-check*
+
+# Native (Phase 2+ expo prebuild 生成, 不进版本库)
+ios/
+android/
+
+# Node / pnpm
+node_modules/
+.npm/
+
+# Testing
+coverage/
+
+# Misc
+.DS_Store
+*.log
+.env*.local
+.env

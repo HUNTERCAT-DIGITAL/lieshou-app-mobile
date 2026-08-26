@@ -1,0 +1,47 @@
+{
+  "expo": {
+    "name": "猎手云 Pro",
+    "slug": "lieshoucloud-mobile",
+    "version": "0.0.1",
+    "orientation": "portrait",
+    "scheme": "lieshoucloud",
+    "userInterfaceStyle": "automatic",
+    "icon": "./assets/icon.png",
+    "splash": {
+      "image": "./assets/splash-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#1677ff"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "cn.huntercat.lieshoucloudpro.mobile",
+      "icon": "./assets/icon.png"
+    },
+    "android": {
+      "package": "cn.huntercat.lieshoucloudpro.mobile",
+      "versionCode": 1,
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#1677ff"
+      },
+      "permissions": ["INTERNET", "ACCESS_NETWORK_STATE"]
+    },
+    "web": {
+      "bundler": "metro",
+      "output": "static",
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": ["expo-router"],
+    "experiments": {
+      "typedRoutes": true,
+      "tsconfigPaths": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "b6157c55-cdfa-4fef-b737-1688a7a55128"
+      }
+    },
+    "owner": "futurewl"
+  }
+}

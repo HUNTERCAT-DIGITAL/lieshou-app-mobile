@@ -1,0 +1,13 @@
+node_modules/
+.expo/
+.expo-shared/
+web-build/
+dist/
+ios/
+android/
+coverage/
+.git/
+.github/
+.babel-cache
+*.log
+.env

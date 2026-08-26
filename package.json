@@ -1,0 +1,76 @@
+{
+  "name": "@lieshoucloud/mobile-app",
+  "version": "0.0.1",
+  "private": true,
+  "main": "expo-router/entry",
+  "scripts": {
+    "start": "expo start",
+    "android": "expo start --android",
+    "ios": "expo start --ios",
+    "web": "expo start --web",
+    "build": "expo export --platform all",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "test": "jest --passWithNoTests",
+    "test:ci": "jest --ci --passWithNoTests",
+    "test:coverage": "jest --coverage --passWithNoTests"
+  },
+  "dependencies": {
+    "@babel/runtime": "^7.25.0",
+    "@expo/metro-runtime": "~57.0.12",
+    "@lieshoucloud/api-client": "workspace:*",
+    "@lieshoucloud/types": "workspace:*",
+    "@react-native-async-storage/async-storage": "2.2.0",
+    "abort-controller": "^3.0.0",
+    "base64-js": "^1.5.1",
+    "event-target-shim": "^5.0.1",
+    "expo": "~57.0.15",
+    "expo-constants": "~57.0.13",
+    "expo-linking": "~57.0.7",
+    "expo-router": "~57.0.15",
+    "expo-status-bar": "~57.0.1",
+    "invariant": "^2.2.4",
+    "promise": "^8.3.0",
+    "react": "19.2.3",
+    "react-dom": "19.2.3",
+    "react-native": "0.86.2",
+    "react-native-gesture-handler": "~2.32.0",
+    "react-native-reanimated": "~4.5.1",
+    "react-native-safe-area-context": "5.7.0",
+    "react-native-screens": "~4.26.2",
+    "react-native-web": "~0.21.2",
+    "react-native-worklets": "0.10.1",
+    "react-router-dom": "^7.18.2",
+    "regenerator-runtime": "^0.13.2",
+    "whatwg-fetch": "^3.0.0",
+    "zustand": "5.0.2"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.25.0",
+    "@lieshoucloud/config": "workspace:*",
+    "@types/jest": "^29.5.12",
+    "@types/node": "~22.9.0",
+    "@types/react": "~19.0.0",
+    "@types/react-test-renderer": "^19.1.0",
+    "babel-preset-expo": "~57.0.7",
+    "eslint": "^9.39.5",
+    "eslint-config-expo": "~57.0.1",
+    "jest": "^29.7.0",
+    "jest-expo": "~57.0.4",
+    "react-test-renderer": "19.2.3",
+    "typescript": "6.0.3"
+  },
+  "engines": {
+    "node": ">=22.0.0 <23.0.0",
+    "pnpm": ">=9.0.0 <10.0.0"
+  },
+  "expo": {
+    "install": {
+      "exclude": [
+        "@types/react"
+      ]
+    }
+  },
+  "packageManager": "pnpm@9.12.0"
+}

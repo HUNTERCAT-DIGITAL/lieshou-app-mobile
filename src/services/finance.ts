@@ -1,0 +1,48 @@
+/**
+ * Mobile finance service（Phase 9 · 多端接入）.
+ */
+import { request } from "@lieshoucloud/api-client";
+
+export type LedgerType = "INCOME" | "EXPENSE";
+
+export interface LedgerEntry {
+  id: number;
+  type: LedgerType;
+  amount: number;
+  category?: string | null;
+  occurredAt: string;
+  remark?: string | null;
+  createdAt: string;
+}
+
+export interface LedgerSummary {
+  income: number;
+  expense: number;
+  balance: number;
+  count: number;
+}
+
+export async function listLedger(): Promise<LedgerEntry[]> {
+  return request<LedgerEntry[]>({ method: "GET", path: `/ledger` });
+}
+
+export async function getSummary(): Promise<LedgerSummary> {
+  return request<LedgerSummary>({ method: "GET", path: `/ledger/summary` });
+}
+
+export async function createLedger(body: {
+  type: LedgerType;
+  amount: number;
+  category?: string;
+  occurredAt: string;
+  remark?: string;
+}): Promise<LedgerEntry> {
+  return request<LedgerEntry>({ method: "POST", path: `/ledger`, body });
+}
+
+export const LEDGER_TYPE_META: Record<LedgerType, { text: string; color: string }> = {
+  INCOME: { text: "收入", color: "#52c41a" },
+  EXPENSE: { text: "支出", color: "#f5222d" },
+};
+
+export const LEDGER_CATEGORIES = ["销售收入", "服务收入", "房租", "工资", "采购", "税费", "办公", "其他"];
