@@ -21,14 +21,17 @@
     }
   },
   "include": [
-    "**/*.ts",
-    "**/*.tsx",
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "app/**/*.tsx",
     ".expo/types/**/*.ts",
     "expo-env.d.ts"
   ],
   "exclude": [
     "node_modules",
     "open/*/src/**/*.test.*",
-    "industry"
+    "industry",
+    "open",
+    "open/**"
   ]
 }
