@@ -1,7 +1,25 @@
-import { Stack } from "expo-router";
+import { Stack, router } from "expo-router";
 import { StatusBar } from "expo-status-bar";
+import { configureCore } from "@lieshoucloud/core-web";
 
 import { RootGate } from "../src/components/RootGate";
+
+// —— 注入 core-web 端口（业务核心层 · 2026-09 铺开）——
+configureCore({
+  storage: {
+    get: (k) => (typeof localStorage !== "undefined" ? localStorage.getItem(k) : null),
+    set: (k, v) => localStorage?.setItem(k, v),
+    remove: (k) => localStorage?.removeItem(k),
+  },
+  notifier: {
+    success: () => {},
+    error: () => {},
+  },
+  navigation: {
+    to: (p) => router.push(p),
+    replace: (p) => router.replace(p),
+  },
+});
 
 /**
  * Root Stack - 所有 Expo Router 屏幕的容器.
