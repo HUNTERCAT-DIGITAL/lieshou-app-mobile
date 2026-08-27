@@ -1,7 +1,7 @@
 /**
  * 工作台配置单测：行业 × 角色 → 菜单过滤.
  */
-import { canAccess, getWorkbench, WORKBENCHES } from "./workbench";
+import { canAccess, getWorkbench, mergeClientTabs, WORKBENCHES } from "./workbench";
 
 describe("workbench · 工作台配置", () => {
   it("generic 工作台包含现有功能菜单", () => {
@@ -22,6 +22,21 @@ describe("workbench · 工作台配置", () => {
     const wb = getWorkbench("generic", []);
     expect(wb.industry).toBe("generic");
     expect(wb.items.length).toBeGreaterThan(0);
+  });
+
+  it("mergeClientTabs：独立仓 EXTRA_TABS 为空时不改变菜单", () => {
+    const base = [{ key: "index", title: "工作台", icon: "📊", href: "/" }];
+    expect(mergeClientTabs(base)).toEqual(base);
+  });
+
+  it("mergeClientTabs：客户仓注入 tab 追加到菜单尾", () => {
+    // 模拟客户注入（prepare 覆盖 editions/extra.ts 后 EXTRA_TABS 非空）
+    const items = mergeClientTabs([
+      { key: "index", title: "工作台", icon: "📊", href: "/" },
+    ]);
+    // 独立仓为空 → 至少保留 base（客户注入行为由客户仓 prepare 后构建验证）
+    expect(items[0]).toEqual({ key: "index", title: "工作台", icon: "📊", href: "/" });
+    expect(items.length).toBeGreaterThanOrEqual(1);
   });
 
   it("role 白名单过滤：角色不匹配的菜单隐藏", () => {

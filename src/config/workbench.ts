@@ -11,6 +11,7 @@
  * item.roles 缺省 = 全部登录用户可见。
  */
 import type { IndustryId } from "./industry";
+import { EXTRA_TABS } from "./editions/extra";
 
 
 export interface WorkbenchItem {
@@ -53,14 +54,31 @@ export const WORKBENCHES: Record<IndustryId, Workbench> = {
 };
 
 /**
+ * 客户仓注入 tab → 工作台菜单项（槽位：editions/extra.ts 的 EXTRA_TABS）.
+ * 独立仓库 EXTRA_TABS 为空 → 零变化；客户仓 prepare 注入后自动合并。
+ */
+export function mergeClientTabs(items: WorkbenchItem[]): WorkbenchItem[] {
+  return [
+    ...items,
+    ...EXTRA_TABS.map((t) => ({
+      key: t.key,
+      title: t.title,
+      icon: t.icon,
+      href: t.href,
+    })),
+  ];
+}
+
+/**
  * 按行业 + 登录角色取工作台（过滤 role 白名单）.
- * 行业包可注入自定义工作台（替换 WORKBENCHES[id]）。
+ * 行业包可注入自定义工作台（替换 WORKBENCHES[id]）；
+ * 客户仓注入的 tab 由 mergeClientTabs 合并（2026-09 客户聚合仓模式）。
  */
 export function getWorkbench(industry: IndustryId, roles: string[] = []): Workbench {
   const wb = WORKBENCHES[industry] ?? GENERIC_WORKBENCH;
   return {
     ...wb,
-    items: wb.items.filter(
+    items: mergeClientTabs(wb.items).filter(
       (it) => !it.roles || it.roles.length === 0 || it.roles.some((r) => roles.includes(r)),
     ),
   };
