@@ -12,7 +12,7 @@
 ## 技术栈
 
 - Expo ~57(React Native + TypeScript)+ expo-router
-- 共享层 `@lieshoucloud/{api-client,config,types}` 经 `open/` submodule 挂载 [lieshou-cloud-web](https://github.com/HUNTERCAT-DIGITAL/lieshou-cloud-web)
+- 共享层 `@lieshoucloud/{contract-api,contract-types,contract-config,core-web}` 经 `open/` submodule 挂载 [lieshou-cloud-web](https://github.com/HUNTERCAT-DIGITAL/lieshou-cloud-web)
 
 ## 快速开始
 
@@ -39,6 +39,16 @@ pnpm start                                # Expo dev server
 - `src/config/industry.ts`:`EXPO_PUBLIC_INDUSTRY` 行业装配点(缺省 generic;行业包为闭源商业模块)
 - `src/config/workbench.ts`:角色工作台配置(开源版 generic;行业工作台由行业包扩展)
 - 客户薄壳页由客户仓注入(如 `app/(main)/<client>/workspace.tsx`)
+
+## 共享层升级流程
+
+共享层（`open/` 下 submodule：contract-api / contract-types / contract-config / ui / core-web）由独立仓维护：
+
+1. 改共享仓（如 `lieshou-core-web`）→ 提交 + push
+2. 本端升级：`git -C open/core-web fetch origin main && git -C open/core-web checkout <commit>`
+3. 本端提交 gitlink bump（`open/*` 指针变更）
+
+> 纪律：共享仓提交后**立即** bump 各端 pin，避免 submodule 漂移。
 
 ## 关联仓库
 
