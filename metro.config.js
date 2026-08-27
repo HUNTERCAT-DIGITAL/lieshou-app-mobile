@@ -11,6 +11,9 @@ const monorepoRoot = projectRoot; // 独立仓库：根即 monorepo 根（open/ 
 
 const config = getDefaultConfig(projectRoot);
 
+// Metro 默认无 resolver.alias，先初始化（客户包 alias 追加用）
+config.resolver.alias = config.resolver.alias ?? {};
+
 // 1. 监听整个 monorepo 根目录, 让 Metro 能感知 packages/* 与 apps/* 的源文件变化
 config.watchFolders = [monorepoRoot];
 
