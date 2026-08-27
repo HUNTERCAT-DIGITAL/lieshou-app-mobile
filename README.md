@@ -17,7 +17,7 @@
 ## 快速开始
 
 ```bash
-git clone git@github.com:HUNTERCAT-DIGITAL/lieshou-cloud-mobile.git
+git clone git@github.com:HUNTERCAT-DIGITAL/lieshou-mobile.git
 git submodule update --init --recursive   # 拉 open/(lieshou-cloud-web 共享包)
 pnpm install
 pnpm start                                # Expo dev server
