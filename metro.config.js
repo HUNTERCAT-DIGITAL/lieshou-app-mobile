@@ -25,7 +25,7 @@ config.resolver.nodeModulesPaths = [
 
 // 3. 客户聚合仓模式（2026-09）：客户仓 packages/<client> → @lieshoucloud/<client>
 //    客户仓 deploy:prepare 生成 tsconfig.<client>.json（TS 层 paths），此处补充 Metro
-//    运行时 alias（对齐 admin-web vite 客户包正则兜底；Metro 无正则，改扫描 ../packages）。
+//    运行时解析（extraNodeModules 包级映射，子路径自动拼接；对齐 admin-web vite 客户包兜底）。
 //    独立仓库（无客户仓）../packages 不存在 → 跳过，行为与通用版完全一致。
 const clientRoot = path.resolve(monorepoRoot, '../packages');
 if (fs.existsSync(clientRoot)) {
@@ -33,8 +33,10 @@ if (fs.existsSync(clientRoot)) {
   for (const name of fs.readdirSync(clientRoot)) {
     if (!fs.statSync(path.join(clientRoot, name)).isDirectory()) continue;
     const src = path.join(clientRoot, name, 'src');
-    config.resolver.alias[`@lieshoucloud/${name}`] = src;
-    config.resolver.alias[`@lieshoucloud/${name}/*`] = `${src}/*`;
+    config.resolver.extraNodeModules = {
+      ...(config.resolver.extraNodeModules ?? {}),
+      [`@lieshoucloud/${name}`]: src,
+    };
   }
 }
 
