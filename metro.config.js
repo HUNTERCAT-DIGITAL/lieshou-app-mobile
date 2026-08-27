@@ -4,6 +4,7 @@
  */
 const { getDefaultConfig } = require('expo/metro-config');
 const path = require('path');
+const fs = require('fs');
 
 const projectRoot = __dirname;
 const monorepoRoot = projectRoot; // 独立仓库：根即 monorepo 根（open/ submodule）
@@ -18,6 +19,21 @@ config.resolver.nodeModulesPaths = [
   path.resolve(projectRoot, 'node_modules'),
   path.resolve(monorepoRoot, 'node_modules'),
 ];
+
+// 3. 客户聚合仓模式（2026-09）：客户仓 packages/<client> → @lieshoucloud/<client>
+//    客户仓 deploy:prepare 生成 tsconfig.<client>.json（TS 层 paths），此处补充 Metro
+//    运行时 alias（对齐 admin-web vite 客户包正则兜底；Metro 无正则，改扫描 ../packages）。
+//    独立仓库（无客户仓）../packages 不存在 → 跳过，行为与通用版完全一致。
+const clientRoot = path.resolve(monorepoRoot, '../packages');
+if (fs.existsSync(clientRoot)) {
+  config.watchFolders.push(clientRoot);
+  for (const name of fs.readdirSync(clientRoot)) {
+    if (!fs.statSync(path.join(clientRoot, name)).isDirectory()) continue;
+    const src = path.join(clientRoot, name, 'src');
+    config.resolver.alias[`@lieshoucloud/${name}`] = src;
+    config.resolver.alias[`@lieshoucloud/${name}/*`] = `${src}/*`;
+  }
+}
 
 // 3. 层级查找保持开启（默认）：pnpm 把包的传递依赖符号链接在
 //    node_modules/.pnpm/<pkg>@<ver>/node_modules/ 同层，Metro 需要从模块
