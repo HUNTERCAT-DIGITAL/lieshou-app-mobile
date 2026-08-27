@@ -8,6 +8,7 @@ export default [
   // 1. 忽略构建产物与依赖
   {
     ignores: [
+      "open/**",
       "node_modules/**",
       ".expo/**",
       "dist/**",
