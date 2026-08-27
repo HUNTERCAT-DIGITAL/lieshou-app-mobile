@@ -1,7 +1,7 @@
 /**
  * Mobile api 服务单测（baseUrl 配置 + gateway 健康检查降级）.
  */
-import * as apiClient from "@lieshoucloud/api-client";
+import * as apiClient from "@lieshoucloud/contract-api";
 
 import { configureApiBaseUrl, fetchGatewayHealth, MOBILE_API_BASE } from "./api";
 

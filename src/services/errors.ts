@@ -2,7 +2,7 @@
  * Mobile 统一错误判断工具（Phase D · 错误态区分）.
  * 基于 api-client 结构化 ApiError（status=HTTP 码；网络错误无 status）。
  */
-import { isApiError } from "@lieshoucloud/api-client";
+import { isApiError } from "@lieshoucloud/contract-api";
 
 /** 404：资源不存在或不属于当前租户 */
 export function isNotFound(e: unknown): boolean {

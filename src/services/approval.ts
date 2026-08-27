@@ -2,7 +2,7 @@
  * Mobile approval service（ADR-0032 · 审批流，多端接入）.
  * 服务层先行，页面随 Native 端迭代接入（对齐 desktop / mini-program）。
  */
-import { request } from "@lieshoucloud/api-client";
+import { request } from "@lieshoucloud/contract-api";
 
 export type ApprovalType = "EXPENSE" | "PURCHASE" | "SALE" | "OTHER";
 export type ApprovalStatus = "PENDING" | "APPROVED" | "REJECTED" | "CANCELLED";

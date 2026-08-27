@@ -3,7 +3,7 @@
  * 同 business.test：用 jest.spyOn 命名空间（moduleNameMapper 下 jest.mock 不生效）。
  */
 
-import * as apiClient from "@lieshoucloud/api-client";
+import * as apiClient from "@lieshoucloud/contract-api";
 
 import {
   APPROVAL_STATUS_META,

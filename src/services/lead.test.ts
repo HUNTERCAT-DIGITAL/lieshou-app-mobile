@@ -2,7 +2,7 @@
  * Mobile lead service 单测（Phase B · 线索/公海/跟进）.
  * 同 approval.test：jest.spyOn 命名空间。
  */
-import * as apiClient from "@lieshoucloud/api-client";
+import * as apiClient from "@lieshoucloud/contract-api";
 
 import {
   FOLLOWUP_TYPE_META,

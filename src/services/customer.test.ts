@@ -2,12 +2,12 @@
  * Mobile customer service 单测（P0 · 三端补测试）.
  *
  * mobile 的 request 用 query 对象形式（不同于 desktop 的字符串拼 query）。
- * 注意：不能 jest.mock("@lieshoucloud/api-client")——moduleNameMapper 把该
+ * 注意：不能 jest.mock("@lieshoucloud/contract-api")——moduleNameMapper 把该
  * 包映射到 packages/api-client/src（jest.mock 按原 specifier 注册不匹配）。
  * 改用 jest.spyOn 命名空间对象（babel CJS 编译后是 _apiClient.request 属性访问）。
  */
 
-import * as apiClient from "@lieshoucloud/api-client";
+import * as apiClient from "@lieshoucloud/contract-api";
 
 import { STATUS_META, countCustomers, getCustomer, listCustomers } from "./customer";
 

@@ -10,8 +10,8 @@ import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 import { Platform } from "react-native";
 
-import { setAccessTokenProvider } from "@lieshoucloud/api-client";
-import type { CurrentUser } from "@lieshoucloud/types";
+import { setAccessTokenProvider } from "@lieshoucloud/contract-api";
+import type { CurrentUser } from "@lieshoucloud/contract-types";
 import { fetchCurrentUser, login as loginApi } from "../services/auth";
 import { EVENTS, track } from "../services/analytics";
 

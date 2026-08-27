@@ -1,7 +1,7 @@
 /**
  * Mobile customer service（Phase 9 · 多端真实化）.
  */
-import { request } from "@lieshoucloud/api-client";
+import { request } from "@lieshoucloud/contract-api";
 
 export type CustomerStatus = "NEW" | "FOLLOWING" | "CONVERTED" | "LOST";
 

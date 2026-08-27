@@ -12,11 +12,11 @@
       "@/*": [
         "./src/*"
       ],
-      "@lieshoucloud/api-client": [
-        "./open/api-client/src"
+      "@lieshoucloud/contract-api": [
+        "./open/contract-api/src"
       ],
-      "@lieshoucloud/types": [
-        "./open/types/src"
+      "@lieshoucloud/contract-types": [
+        "./open/contract-types/src"
       ]
     }
   },

@@ -2,7 +2,7 @@
  * Mobile 统一错误判断工具单测（Phase D）.
  * 基于 api-client 的 ApiError（code / message / status；网络错误 status=0）。
  */
-import { ApiError } from "@lieshoucloud/api-client";
+import { ApiError } from "@lieshoucloud/contract-api";
 
 import { getErrorMessage, isNetworkError, isNotFound, isServerError, isUnauthorized } from "./errors";
 

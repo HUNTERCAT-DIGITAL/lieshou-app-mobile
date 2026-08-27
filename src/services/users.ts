@@ -2,7 +2,7 @@
  * Mobile user service —— 租户内用户列表（审批流选审批人用）.
  * 对齐 user-service GET /api/users（X-Tenant-Id 强制过滤）.
  */
-import { request } from "@lieshoucloud/api-client";
+import { request } from "@lieshoucloud/contract-api";
 
 export interface TenantUser {
   id: number;

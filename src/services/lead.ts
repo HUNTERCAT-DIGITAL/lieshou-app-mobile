@@ -2,7 +2,7 @@
  * Mobile lead service —— 线索池 / 公海 / 跟进（Phase B · 销售场景）.
  * 对齐 CRM LeadController（GET/POST /api/leads + assign/release/convert/follow-ups）.
  */
-import { request } from "@lieshoucloud/api-client";
+import { request } from "@lieshoucloud/contract-api";
 
 export type LeadStatus = "NEW" | "FOLLOWING" | "CONVERTED" | "LOST";
 export type LeadSource = "MANUAL" | "IMPORT" | "CHANNEL" | "OTHER";

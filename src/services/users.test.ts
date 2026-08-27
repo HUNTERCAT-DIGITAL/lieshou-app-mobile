@@ -2,7 +2,7 @@
  * Mobile users service 单测（审批流选审批人）.
  * 同 approval.test：jest.spyOn 命名空间（moduleNameMapper 下 jest.mock 不生效）。
  */
-import * as apiClient from "@lieshoucloud/api-client";
+import * as apiClient from "@lieshoucloud/contract-api";
 
 import { listUsers, userDisplayName } from "./users";
 

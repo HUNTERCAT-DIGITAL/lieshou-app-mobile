@@ -1,9 +1,9 @@
 import { Platform } from "react-native";
-import { setBaseUrl } from "@lieshoucloud/api-client";
-import type { HealthStatus } from "@lieshoucloud/types";
+import { setBaseUrl } from "@lieshoucloud/contract-api";
+import type { HealthStatus } from "@lieshoucloud/contract-types";
 
 /**
- * Mobile API client - 通过 @lieshoucloud/api-client 共享 HTTP 调用层.
+ * Mobile API client - 通过 @lieshoucloud/contract-api 共享 HTTP 调用层.
  *
  * 后端地址: apps/mobile 在 Expo web/iOS/Android 下访问 Spring Cloud Gateway
  *   - Web (浏览器): 走相对 /api，由 nginx/vite 反代到 gateway
@@ -17,7 +17,7 @@ import type { HealthStatus } from "@lieshoucloud/types";
  *  - dev / Expo Go：默认 https://expo.lieshoucloud.huntercat.cn（Metro 代理域名，nginx /api → gateway）
  *  - 正式打包：构建时注入生产域名（EAS environment variable），默认值仅作 dev 兜底
  */
-import { resolveApiBase } from '@lieshoucloud/config';
+import { resolveApiBase } from '@lieshoucloud/contract-config';
 
 export const MOBILE_API_BASE = resolveApiBase({ defaultBase: 'https://expo.lieshoucloud.huntercat.cn', tool: 'expo' });
 

@@ -19,8 +19,8 @@
   "dependencies": {
     "@babel/runtime": "^7.25.0",
     "@expo/metro-runtime": "~57.0.12",
-    "@lieshoucloud/api-client": "workspace:*",
-    "@lieshoucloud/types": "workspace:*",
+    "@lieshoucloud/contract-api": "workspace:*",
+    "@lieshoucloud/contract-types": "workspace:*",
     "@react-native-async-storage/async-storage": "2.2.0",
     "abort-controller": "^3.0.0",
     "base64-js": "^1.5.1",
@@ -44,11 +44,12 @@
     "react-router-dom": "^7.18.2",
     "regenerator-runtime": "^0.13.2",
     "whatwg-fetch": "^3.0.0",
-    "zustand": "5.0.2"
+    "zustand": "5.0.2",
+    "@lieshoucloud/core-web": "workspace:*"
   },
   "devDependencies": {
     "@babel/core": "^7.25.0",
-    "@lieshoucloud/config": "workspace:*",
+    "@lieshoucloud/contract-config": "workspace:*",
     "@types/jest": "^29.5.12",
     "@types/node": "~22.9.0",
     "@types/react": "~19.0.0",

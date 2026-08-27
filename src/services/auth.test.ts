@@ -1,7 +1,7 @@
 /**
  * Mobile auth service 单测（login / fetchCurrentUser / isApiError）.
  */
-import * as apiClient from "@lieshoucloud/api-client";
+import * as apiClient from "@lieshoucloud/contract-api";
 
 import { fetchCurrentUser, isApiError, login } from "./auth";
 
