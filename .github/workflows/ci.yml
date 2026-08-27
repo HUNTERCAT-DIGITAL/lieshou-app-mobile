@@ -22,7 +22,9 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: pnpm
+          # 不用 cache: pnpm —— self-hosted runner 的缓存上传目标 Azure Blob
+          # (blob.core.windows.net) 本地网络/代理均不通，1.2GB 缓存上传会 0 MB/s 挂死；
+          # runner 本地已有全局 pnpm store，install 本就很快（见 .ai/decisions 或 git 记录）。
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
       - name: Typecheck + Build + Lint + Test
