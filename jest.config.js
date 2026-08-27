@@ -20,7 +20,10 @@ module.exports = {
   // 排除 open/ submodule（开源 packages 的测试由各自仓库/包自行跑，端仓库 jest 不扫）
   testPathIgnorePatterns: ["/node_modules/", "/open/", "/dist/", "/.expo/"],
   // 排除 industry submodule 树（其内部另挂 open/，避免 jest-haste-map 撞上重复的 @lieshoucloud/* 包）
-  modulePathIgnorePatterns: ["<rootDir>/industry/"],
+  // 同理排除 open/* 内部的嵌套 submodule 树（open/contract-api·contract-types·ui 内部都另挂 open/，
+  // 且 gitlink 与顶层 contract-* 指向同 commit —— recursive checkout 后出现多份同名 package.json →
+  // haste map 命名冲突）。moduleNameMapper 已把 contract-*/core-web 指向顶层 src，不受影响。
+  modulePathIgnorePatterns: ["<rootDir>/industry/", "<rootDir>/open/[^/]+/open/"],
   // jest-expo preset 默认的 transformIgnorePatterns 漏了 `@react-native+js-polyfills`
   // （pnpm 把包放在 .pnpm/<name>+<ver>/node_modules/，目录名里用 `+` 而不是 `/`）。
   // 用 .pnpm 路径前缀做白名单，让 babel 处理 .pnpm 下所有 react-native 系包。
