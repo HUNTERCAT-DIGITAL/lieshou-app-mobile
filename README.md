@@ -1,4 +1,4 @@
-# LieShouCloud-mobile · 猎手云移动端(开源)
+# lieshou-cloud-mobile · 猎手云移动端(开源)
 
 > 猎手云(开源)的主移动端:Expo ~57(React Native),承载登录 / 工作台 / 客户 / 线索 / 库存 / 记账 / 审批等通用业务。
 > 行业能力与客户定制通过 **Edition + 行业装配点**(`EXPO_PUBLIC_INDUSTRY`)注入,不在本仓内(行业包为闭源商业模块)。
@@ -12,13 +12,13 @@
 ## 技术栈
 
 - Expo ~57(React Native + TypeScript)+ expo-router
-- 共享层 `@lieshoucloud/{api-client,config,types}` 经 `open/` submodule 挂载 [LieShouCloud-web](https://github.com/HUNTERCAT-DIGITAL/LieShouCloud-web)
+- 共享层 `@lieshoucloud/{api-client,config,types}` 经 `open/` submodule 挂载 [lieshou-cloud-web](https://github.com/HUNTERCAT-DIGITAL/lieshou-cloud-web)
 
 ## 快速开始
 
 ```bash
-git clone git@github.com:HUNTERCAT-DIGITAL/LieShouCloud-mobile.git
-git submodule update --init --recursive   # 拉 open/(LieShouCloud-web 共享包)
+git clone git@github.com:HUNTERCAT-DIGITAL/lieshou-cloud-mobile.git
+git submodule update --init --recursive   # 拉 open/(lieshou-cloud-web 共享包)
 pnpm install
 pnpm start                                # Expo dev server
 ```
@@ -42,10 +42,10 @@ pnpm start                                # Expo dev server
 
 ## 关联仓库
 
-- 共享层(开源):`HUNTERCAT-DIGITAL/LieShouCloud-web`
-- 后端底座(开源):`HUNTERCAT-DIGITAL/LieShouCloud`
-- 其他端(开源):`LieShouCloud-admin-web` · `LieShouCloud-desktop` · `LieShouCloud-mini-program`
-- 商业主仓:`HUNTERCAT-DIGITAL/LieShouCloudPro`
+- 共享层(开源):`HUNTERCAT-DIGITAL/lieshou-cloud-web`
+- 后端底座(开源):`HUNTERCAT-DIGITAL/lieshou-cloud`
+- 其他端(开源):`lieshou-cloud-admin-web` · `lieshou-cloud-desktop` · `lieshou-cloud-mini-program`
+- 商业主仓:`HUNTERCAT-DIGITAL/lieshou-cloud-pro`
 
 ## License
 
