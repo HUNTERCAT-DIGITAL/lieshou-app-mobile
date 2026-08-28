@@ -30,5 +30,9 @@ coverage/
 *.log
 .env*.local
 .env
+
+# CodeGraph 索引（本地重建：codegraph init）
+.codegraph/
+
 # LieShouBoot prepare.mjs 生成的薄壳页（勿提交）
 app/(main)/boot/
