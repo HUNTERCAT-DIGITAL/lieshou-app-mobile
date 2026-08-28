@@ -46,8 +46,8 @@ export default function Inventory() {
     const n = Number(qty);
     if (!Number.isFinite(n) || n <= 0) return;
     try {
-      if (stockType === "IN") await stockIn(stockProduct.id, n);
-      else await stockOut(stockProduct.id, n);
+      if (stockType === "IN") await stockIn(stockProduct.id, { quantity: n });
+      else await stockOut(stockProduct.id, { quantity: n });
       Alert.alert("成功", stockType === "IN" ? "入库成功" : "出库成功");
       setStockProduct(null);
       setQty("");

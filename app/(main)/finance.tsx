@@ -8,7 +8,7 @@ import { Alert, FlatList, Modal, Pressable, RefreshControl, StyleSheet, Text, Te
 import { EmptyState, StatusBadge } from "../../src/components/MobileUI";
 import {
   createLedger,
-  getSummary,
+  getLedgerSummary,
   LEDGER_CATEGORIES,
   LEDGER_TYPE_META,
   listLedger,
@@ -30,7 +30,7 @@ export default function Finance() {
   const load = async () => {
     setLoading(true);
     try {
-      const [list, s] = await Promise.all([listLedger(), getSummary()]);
+      const [list, s] = await Promise.all([listLedger(), getLedgerSummary()]);
       setEntries(list);
       setSummary(s);
     } catch {

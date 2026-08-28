@@ -1,48 +1,26 @@
 /**
- * Mobile finance service（Phase 9 · 多端接入）.
+ * Mobile finance service —— 收支记账（Phase 9 · 多端真实化）.
+ *
+ * 2026-09 上收 lieshou-core-web（业务逻辑唯一源，同 approval/customer/lead 模式）：
+ * 实现移至 core-web features/finance/finance.api.ts（走注入的 ApiPort 传输），
+ * 本文件保留导出路径兼容既有页面/测试（import '../../services/finance' 不变）。
+ * 命名对齐 core-web：getSummary → getLedgerSummary；META/类型来自 contract-types。
  */
-import { request } from "@lieshoucloud/contract-api";
-
-export type LedgerType = "INCOME" | "EXPENSE";
-
-export interface LedgerEntry {
-  id: number;
-  type: LedgerType;
-  amount: number;
-  category?: string | null;
-  occurredAt: string;
-  remark?: string | null;
-  createdAt: string;
-}
-
-export interface LedgerSummary {
-  income: number;
-  expense: number;
-  balance: number;
-  count: number;
-}
-
-export async function listLedger(): Promise<LedgerEntry[]> {
-  return request<LedgerEntry[]>({ method: "GET", path: `/api/ledger` });
-}
-
-export async function getSummary(): Promise<LedgerSummary> {
-  return request<LedgerSummary>({ method: "GET", path: `/api/ledger/summary` });
-}
-
-export async function createLedger(body: {
-  type: LedgerType;
-  amount: number;
-  category?: string;
-  occurredAt: string;
-  remark?: string;
-}): Promise<LedgerEntry> {
-  return request<LedgerEntry>({ method: "POST", path: `/api/ledger`, body });
-}
-
-export const LEDGER_TYPE_META: Record<LedgerType, { text: string; color: string }> = {
-  INCOME: { text: "收入", color: "#52c41a" },
-  EXPENSE: { text: "支出", color: "#f5222d" },
-};
-
-export const LEDGER_CATEGORIES = ["销售收入", "服务收入", "房租", "工资", "采购", "税费", "办公", "其他"];
+export {
+  listLedger,
+  getLedgerSummary,
+  getMonthlySummary,
+  getLedger,
+  createLedger,
+  updateLedger,
+  deleteLedger,
+} from "@lieshoucloud/core-web";
+export type {
+  CreateLedgerRequest,
+  LedgerEntry,
+  LedgerSummary,
+  LedgerType,
+  MonthlySummary,
+  UpdateLedgerRequest,
+} from "@lieshoucloud/contract-types";
+export { LEDGER_CATEGORIES, LEDGER_TYPE_META } from "@lieshoucloud/contract-types";

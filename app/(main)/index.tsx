@@ -12,16 +12,13 @@ import { getWorkbench } from "../../src/config/workbench";
 import { EmptyState, RoleBadge } from "../../src/components/MobileUI";
 import { countCustomers, listCustomers, STATUS_META, type Customer } from "../../src/services/customer";
 import { getApprovalCounts } from "../../src/services/approval";
-import { getSummary, type LedgerSummary } from "../../src/services/finance";
+import { getLedgerSummary, type LedgerSummary } from "../../src/services/finance";
 import { listLeads } from "../../src/services/lead";
-import { listProducts, type Product } from "../../src/services/inventory";
+import { LOW_STOCK_THRESHOLD, listProducts, stockLevel, type Product } from "../../src/services/inventory";
 import { EVENTS, track } from "../../src/services/analytics";
 import { useAuthStore } from "../../src/stores/auth";
 import { WorkbenchHeader } from "../../src/components/WorkbenchHeader";
 import { colors } from "../../src/theme/colors";
-
-/** 低库存预警阈值（件） */
-const LOW_STOCK_THRESHOLD = 5;
 
 interface Metrics {
   customerCount: number | null;
@@ -57,12 +54,12 @@ export default function Workbench() {
         listLeads(),
         getApprovalCounts(),
         listProducts(),
-        getSummary(),
+        getLedgerSummary(),
         listCustomers(),
       ]);
       const low = products
         .filter(
-          (p) => p.stockQuantity !== null && p.stockQuantity !== undefined && p.stockQuantity <= LOW_STOCK_THRESHOLD,
+          (p) => p.stockQuantity !== null && p.stockQuantity !== undefined && stockLevel(p.stockQuantity) !== "OK",
         )
         .sort((a, b) => (a.stockQuantity ?? 0) - (b.stockQuantity ?? 0));
       setMetrics({
