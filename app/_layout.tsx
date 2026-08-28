@@ -1,8 +1,9 @@
-import { Stack, router } from "expo-router";
+import { Stack, router, type Href } from "expo-router";
 import { StatusBar } from "expo-status-bar";
-import { configureCore } from "@lieshoucloud/core-web";
+import { configureCore, useAuthStore } from "@lieshoucloud/core-web";
 
 import { RootGate } from "../src/components/RootGate";
+import { apiBaseUrl } from "../src/services/api";
 
 // —— 注入 core-web 端口（业务核心层 · 2026-09 铺开）——
 configureCore({
@@ -16,8 +17,31 @@ configureCore({
     error: () => {},
   },
   navigation: {
-    to: (p) => router.push(p),
-    replace: (p) => router.replace(p),
+    // 动态路由（客户 tab 注入 href 为 string）：cast 到 Href 兼容 typed routes
+    to: (p) => router.push(p as Href),
+    replace: (p) => router.replace(p as Href),
+  },
+  // HTTP 传输端口：core-web 的 requestApi 走这里（缺省裸 fetch 相对路径会 Invalid URL）
+  api: {
+    request: async (path, init) => {
+      const method = init?.method ?? "GET";
+      const headers: Record<string, string> = {
+        "Content-Type": "application/json",
+        ...(init?.headers as Record<string, string> | undefined),
+      };
+      const token = useAuthStore.getState().accessToken;
+      if (token) headers.Authorization = `Bearer ${token}`;
+      // web 同源相对路径（nginx /api → gateway），native 用公网域名（避免 web 跨域 CORS）
+      const res = await fetch(`${apiBaseUrl()}${path}`, {
+        method,
+        headers,
+        body: init?.body,
+      });
+      if (!res.ok) {
+        throw new Error(`HTTP ${res.status}`);
+      }
+      return res.json();
+    },
   },
 });
 
