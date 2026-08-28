@@ -1,6 +1,10 @@
 /**
  * Mobile approval service（ADR-0032 · 审批流，多端接入）.
  * 服务层先行，页面随 Native 端迭代接入（对齐 desktop / mini-program）。
+ *
+ * 职责边界（2026-09）：本文件是 mobile 审批**数据层事实源**（列表/详情/发起/操作）；
+ * core-web useApproval 是「状态流转操作」hook（建设中、未接线）。
+ * 接入 core-web 后操作类调用将迁往 ApiPort，数据获取仍留本层。
  */
 import { request } from "@lieshoucloud/contract-api";
 

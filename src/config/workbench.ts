@@ -1,6 +1,10 @@
 /**
  * 工作台配置（端壳模板 · 角色工作台框架）.
  *
+ * 职责边界（2026-09）：本文件是「端壳装配」（行业 × 角色 × 客户 tab 注入，供
+ * (main)/_layout.tsx 渲染 Tabs）；core-web useWorkbench 是「能力目录裁剪器」
+ * （商业版 capability 过滤），两者分层不同——本配置是 mobile 工作台唯一事实源。
+ *
  * 每个行业（generic/edu/legal/iot）× 登录角色 → 一组菜单/首页。
  * 主布局 (main)/_layout.tsx 从本配置渲染导航，行业菜单由行业包
  * （industry-{edu,iot,legal}，经 industry/ submodule 提供）装配
