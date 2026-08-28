@@ -63,6 +63,15 @@ describe("workbench · 工作台配置", () => {
     expect(keys2).toContain("dwjk/rules");
   });
 
+  it("mergeClientTabs：默认 EXTRA_TABS（daizhang 客户仓非空）追加到菜单尾", () => {
+    const base = [{ key: "index", title: "工作台", icon: "view-dashboard", href: "/" }];
+    const items = mergeClientTabs(base);
+    // base 永远保留（客户 tab 只在 prepare 注入后追加；独立仓零变化由默认参数保证）
+    expect(items[0]).toEqual(base[0]);
+    // daizhang 客户仓：注入「电子账务工作台」tab
+    expect(items.some((i) => i.href === "/daizhang/workspace")).toBe(true);
+  });
+
   it("mergeClientTabs：客户仓注入 tab 追加到菜单尾", () => {
     // 模拟客户注入（prepare 覆盖 editions/extra.ts 后 EXTRA_TABS 非空）
     const items = mergeClientTabs([
