@@ -29,6 +29,11 @@
 - 开工先 `git submodule update --init --recursive` + `git submodule status` 查漂移
 - core-web 改动后 `codegraph sync` 刷新索引
 
+## API 基址约定（2026-09-10 治本）
+- `/api` 前缀由 `contract-api normalizeApiPath` 幂等归一（单一兜底点），path 写不写 /api 都安全
+- **baseUrl 一律纯域名/空串**（同源反代）——禁止在 VITE_API_BASE/API_BASE_URL 注入带 `/api` 后缀（normalize 兼容但易歧义；desktop 生产注入历史带 /api，见下）
+- 遗留：desktop 生产注入 VITE_API_BASE 带 /api 后缀（发布脚本）——normalize 的「baseUrl 含 /api 段 → path 不动」分支兼容；**待办：后续统一为纯域名**
+
 ## 当前阶段
 - 2026-09 组合化重构铺开：core-web 已提供 auth/approval/workbench，本地实现持续上收
 - 客户 dwjk（iot）5 tab 由 EXTRA_TABS 注入；web 端 SPA + 同源 API（nginx /api → gateway）
