@@ -16,11 +16,13 @@ function routeNameFromFile(rel: string): string {
   return withoutExt.endsWith("/index") ? withoutExt.slice(0, -"/index".length) : withoutExt;
 }
 
-/** 递归收集 app/(main)/ 下全部路由名（排除 _layout） */
+/** 递归收集 app/(main)/ 下全部路由名（排除 _layout；排除客户注入目录 daizhang/ 等 —— 槽位路由不参与通用清单一致性） */
 function collectFileRoutes(dir: string, prefix = ""): string[] {
   const out: string[] = [];
   for (const entry of readdirSync(dir)) {
     if (entry === "_layout.tsx") continue;
+    // 客户注入槽位（deploy:prepare 生成的薄壳页，如 daizhang/workspace）不属于通用路由清单
+    if (entry === "daizhang" || entry === "legalmind" || entry === "dwjk") continue;
     const full = join(dir, entry);
     if (statSync(full).isDirectory()) {
       out.push(...collectFileRoutes(full, `${prefix}${entry}/`));

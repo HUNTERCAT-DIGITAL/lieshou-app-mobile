@@ -25,10 +25,12 @@ describe("workbench · 工作台配置", () => {
   it("行业装配点：iot 专属工作台（纯 IoT 壳），edu/legal 回退通用", () => {
     expect(WORKBENCHES.iot.industry).toBe("iot");
     expect(WORKBENCHES.iot.home).toBe("/dwjk/overview");
-    // 独立仓无客户注入：iot 壳 items 为空（tab 由客户 EXTRA_TABS 注入）
+    // daizhang 客户仓：EXTRA_TABS 非空 → 纯 IoT 壳 + 客户 tab（无通用 CRM/进销存/记账/审批）
     const titles = getWorkbench("iot").items.map((i) => i.title);
-    expect(titles).toEqual([]);
-    // 模拟客户注入（总览/设备/告警/产品/规则）→ 纯 IoT，不含通用 CRM/进销存/记账/审批
+    expect(titles.filter((t) => t !== "电子账务工作台")).toEqual([]);
+    expect(titles).not.toContain("客户");
+    expect(titles).not.toContain("记账");
+    // 模拟客户注入（总览/设备/告警/产品/规则）→ 纯 IoT，不含通用业务菜单
     const injected = getWorkbench("iot", [], IOT_CLIENT_TABS).items.map((i) => i.title);
     expect(injected).toEqual(["总览", "设备", "告警", "产品", "规则"]);
     expect(injected).not.toContain("客户");
