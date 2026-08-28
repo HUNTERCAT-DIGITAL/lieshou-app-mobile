@@ -12,4 +12,4 @@
 	url = git@github.com:HUNTERCAT-DIGITAL/lieshou-ui.git
 [submodule "open/core-web"]
 	path = open/core-web
-	url = https://github.com/HUNTERCAT-DIGITAL/lieshou-core-web.git
+	url = git@github.com:HUNTERCAT-DIGITAL/lieshou-core-web.git
