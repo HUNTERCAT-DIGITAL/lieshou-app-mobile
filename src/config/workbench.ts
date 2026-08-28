@@ -46,27 +46,41 @@ const GENERIC_WORKBENCH: Workbench = {
   ],
 };
 
+/** 物联网工作台（纯 IoT · 电网监控客户；移除通用 CRM/进销存/记账/审批） */
+const IOT_WORKBENCH: Workbench = {
+  industry: "iot",
+  home: "/dwjk/workspace",
+  items: [
+    { key: "dwjk/workspace", title: "电网监控", icon: "⚡", href: "/dwjk/workspace" },
+  ],
+};
+
 export const WORKBENCHES: Record<IndustryId, Workbench> = {
   generic: GENERIC_WORKBENCH,
   edu: GENERIC_WORKBENCH,
   legal: GENERIC_WORKBENCH,
-  iot: GENERIC_WORKBENCH,
+  iot: IOT_WORKBENCH,
 };
 
 /**
  * 客户仓注入 tab → 工作台菜单项（槽位：editions/extra.ts 的 EXTRA_TABS）.
  * 独立仓库 EXTRA_TABS 为空 → 零变化；客户仓 prepare 注入后自动合并。
+ * 同 key 已存在时跳过（避免行业工作台自身定义与客户注入重复）。
  */
 export function mergeClientTabs(items: WorkbenchItem[]): WorkbenchItem[] {
-  return [
-    ...items,
-    ...EXTRA_TABS.map((t) => ({
+  const seen = new Set(items.map((i) => i.key));
+  const merged = [...items];
+  for (const t of EXTRA_TABS) {
+    if (seen.has(t.key)) continue;
+    seen.add(t.key);
+    merged.push({
       key: t.key,
       title: t.title,
       icon: t.icon,
       href: t.href,
-    })),
-  ];
+    });
+  }
+  return merged;
 }
 
 /**
