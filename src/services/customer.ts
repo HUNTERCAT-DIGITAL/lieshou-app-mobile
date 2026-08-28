@@ -7,4 +7,4 @@
  */
 export { countCustomers, getCustomer, listCustomers } from "@lieshoucloud/core-web";
 export type { Customer, CustomerStatus } from "@lieshoucloud/contract-types";
-export { STATUS_META } from "@lieshoucloud/contract-types";
+export { STATUS_META } from "@lieshoucloud/contract-types/business/customer";
