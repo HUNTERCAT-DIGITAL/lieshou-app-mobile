@@ -1,9 +1,22 @@
 import { Stack, router, type Href } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { configureCore, useAuthStore } from "@lieshoucloud/core-web";
+import { setAccessTokenProvider, setRefreshTokensProvider } from "@lieshoucloud/contract-api";
 
 import { RootGate } from "../src/components/RootGate";
 import { apiBaseUrl } from "../src/services/api";
+
+// contract-api request 自动附加 Bearer（客户包 @lieshoucloud/dwjk 的 API 走 contract-api request）
+setAccessTokenProvider(() => useAuthStore.getState().accessToken);
+// 401 单飞刷新：复用 core-web 会话 refresh（成功后 contract-api 自动重试原请求）
+setRefreshTokensProvider(async () => {
+  try {
+    await useAuthStore.getState().refresh();
+    return true;
+  } catch {
+    return false;
+  }
+});
 
 // —— 注入 core-web 端口（业务核心层 · 2026-09 铺开）——
 configureCore({
