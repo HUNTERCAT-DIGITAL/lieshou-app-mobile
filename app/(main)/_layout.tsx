@@ -7,6 +7,7 @@
  * - 行业 app（edu/legal/iot）通过行业包扩展 WORKBENCHES[id] 后，本布局零改动。
  */
 import { Tabs, useRouter } from "expo-router";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { StyleSheet, Text, View, type ColorValue } from "react-native";
 
 import { EXTRA_HIDDEN } from "../../src/config/editions/extra";
@@ -78,7 +79,7 @@ export default function MainLayout() {
           name={item.key}
           options={{
             title: item.title,
-            tabBarIcon: ({ color }) => <TabIcon color={color} char={item.icon} />,
+            tabBarIcon: ({ color }) => <TabIcon color={color} name={item.icon} />,
           }}
         />
       ))}
@@ -95,13 +96,18 @@ export default function MainLayout() {
   );
 }
 
-/** 简易 tab icon（emoji，省 RN 图标库） */
-function TabIcon({ color, char }: { color: ColorValue; char: string }) {
-  return <Text style={[styles.icon, { color }]}>{char}</Text>;
+/** tab icon（MaterialCommunityIcons 矢量，禁 emoji，见 UI.md §4.4） */
+function TabIcon({ color, name }: { color: ColorValue; name: string }) {
+  return (
+    <MaterialCommunityIcons
+      name={name as React.ComponentProps<typeof MaterialCommunityIcons>["name"]}
+      size={22}
+      color={color}
+    />
+  );
 }
 
 const styles = StyleSheet.create({
-  icon: { fontSize: 18 },
   headerRight: { paddingRight: 12 },
   myLink: { color: "#fff", fontSize: 14, fontWeight: "600" },
 });

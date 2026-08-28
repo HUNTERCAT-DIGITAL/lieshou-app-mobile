@@ -6,6 +6,7 @@
  * 的 StatusTag/RoleTag 视觉上对齐（颜色 + 文字），未来若有 RN-UI 库可再换。
  */
 import type { ReactNode } from "react";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 import { colors } from "../theme/colors";
@@ -40,7 +41,7 @@ export function RoleBadge({ role }: { role: string }): ReactNode {
 export function EmptyState({ message = "暂无数据" }: { message?: string }): ReactNode {
   return (
     <View style={styles.empty}>
-      <Text style={styles.emptyIcon}>📭</Text>
+      <MaterialCommunityIcons name="inbox-outline" size={36} color={colors.textSecondary} style={styles.emptyIcon} />
       <Text style={styles.emptyText}>{message}</Text>
     </View>
   );
@@ -61,7 +62,7 @@ export function ErrorState({
 }): ReactNode {
   return (
     <View style={styles.empty} testID={testID}>
-      <Text style={styles.emptyIcon}>⚠️</Text>
+      <MaterialCommunityIcons name="alert-circle-outline" size={36} color={colors.warning} style={styles.emptyIcon} />
       <Text style={styles.emptyText}>{message}</Text>
       {onRetry ? (
         <TouchableOpacity style={styles.retryBtn} onPress={onRetry} testID={`${testID}-retry`}>
@@ -90,9 +91,8 @@ const styles = StyleSheet.create({
     paddingVertical: 48,
   },
   emptyIcon: {
-    fontSize: 36,
     marginBottom: 8,
-    opacity: 0.6,
+    opacity: 0.9,
   },
   emptyText: {
     fontSize: 14,

@@ -18,6 +18,7 @@ export interface WorkbenchItem {
   /** 对应 Expo Router 文件路由名（Tabs.Screen name） */
   key: string;
   title: string;
+  /** MaterialCommunityIcons 图标名（端壳 TabIcon 矢量渲染，禁 emoji，见 UI.md §4.4） */
   icon: string;
   /** 路由路径（Tab 点击跳转） */
   href: string;
@@ -37,12 +38,12 @@ const GENERIC_WORKBENCH: Workbench = {
   industry: "generic",
   home: "/",
   items: [
-    { key: "index", title: "工作台", icon: "📊", href: "/" },
-    { key: "customers", title: "客户", icon: "👥", href: "/customers" },
-    { key: "leads", title: "线索", icon: "🎯", href: "/leads" },
-    { key: "inventory", title: "库存", icon: "📦", href: "/inventory" },
-    { key: "finance", title: "记账", icon: "💰", href: "/finance" },
-    { key: "approval", title: "审批", icon: "📋", href: "/approval" },
+    { key: "index", title: "工作台", icon: "view-dashboard", href: "/" },
+    { key: "customers", title: "客户", icon: "account-group", href: "/customers" },
+    { key: "leads", title: "线索", icon: "target", href: "/leads" },
+    { key: "inventory", title: "库存", icon: "package-variant", href: "/inventory" },
+    { key: "finance", title: "记账", icon: "cash-multiple", href: "/finance" },
+    { key: "approval", title: "审批", icon: "clipboard-check", href: "/approval" },
   ],
 };
 

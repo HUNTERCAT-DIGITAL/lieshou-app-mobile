@@ -12,7 +12,7 @@ export interface ClientTab {
   key: string;
   /** tab 文案 */
   title: string;
-  /** emoji 图标（端壳 TabIcon 渲染，省 RN 图标库） */
+  /** MaterialCommunityIcons 图标名（端壳 TabIcon 矢量渲染，禁 emoji，见 UI.md §4.4） */
   icon: string;
   /** 路由路径（Tab 点击跳转），如 '/legalmind/workspace' */
   href: string;

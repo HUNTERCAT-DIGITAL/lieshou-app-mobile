@@ -69,6 +69,6 @@ describe("mobile MobileUI", () => {
 
   it("ErrorState：无 onRetry 时不渲染按钮", () => {
     const el = ErrorState({}) as El;
-    expect(textOf(el)).toContain("⚠️");
+    expect(textOf(el)).toContain("加载失败");
   });
 });

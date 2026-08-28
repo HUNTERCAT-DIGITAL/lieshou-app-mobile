@@ -33,7 +33,7 @@ describe("workbench · 工作台配置", () => {
   });
 
   it("mergeClientTabs：客户注入追加且同 key 去重", () => {
-    const base = [{ key: "index", title: "工作台", icon: "📊", href: "/" }];
+    const base = [{ key: "index", title: "工作台", icon: "view-dashboard", href: "/" }];
     const merged = mergeClientTabs(base);
     const keys = merged.map((i) => i.key);
     // 客户仓已注入 EXTRA_TABS（总览/设备/告警/产品/规则）→ 追加到菜单尾
@@ -42,7 +42,7 @@ describe("workbench · 工作台配置", () => {
     // base 已含同 key 时跳过（不重复），其余注入 tab 仍追加
     const base2 = [
       ...base,
-      { key: "dwjk/overview", title: "总览", icon: "📊", href: "/dwjk/overview" },
+      { key: "dwjk/overview", title: "总览", icon: "view-dashboard", href: "/dwjk/overview" },
     ];
     const merged2 = mergeClientTabs(base2);
     const keys2 = merged2.map((i) => i.key);
@@ -54,10 +54,10 @@ describe("workbench · 工作台配置", () => {
   it("mergeClientTabs：客户仓注入 tab 追加到菜单尾", () => {
     // 模拟客户注入（prepare 覆盖 editions/extra.ts 后 EXTRA_TABS 非空）
     const items = mergeClientTabs([
-      { key: "index", title: "工作台", icon: "📊", href: "/" },
+      { key: "index", title: "工作台", icon: "view-dashboard", href: "/" },
     ]);
     // 独立仓为空 → 至少保留 base（客户注入行为由客户仓 prepare 后构建验证）
-    expect(items[0]).toEqual({ key: "index", title: "工作台", icon: "📊", href: "/" });
+    expect(items[0]).toEqual({ key: "index", title: "工作台", icon: "view-dashboard", href: "/" });
     expect(items.length).toBeGreaterThanOrEqual(1);
   });
 
