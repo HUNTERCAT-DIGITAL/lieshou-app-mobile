@@ -26,17 +26,17 @@ export async function listCustomers(keyword?: string, status?: CustomerStatus): 
   if (status) query.status = status;
   return request<Customer[]>({
     method: "GET",
-    path: `/customers`,
+    path: `/api/customers`,
     query,
   });
 }
 
 export async function countCustomers(): Promise<number> {
-  return request<number>({ method: "GET", path: `/customers/count` });
+  return request<number>({ method: "GET", path: `/api/customers/count` });
 }
 
 export async function getCustomer(id: number): Promise<Customer> {
-  return request<Customer>({ method: "GET", path: `/customers/${id}` });
+  return request<Customer>({ method: "GET", path: `/api/customers/${id}` });
 }
 
 export const STATUS_META: Record<CustomerStatus, { text: string; color: string }> = {

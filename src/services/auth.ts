@@ -17,7 +17,7 @@ configureApiBaseUrl();
 export async function login(req: LoginRequest): Promise<TokenResponse> {
   return request<TokenResponse>({
     method: "POST",
-    path: `/auth/login`,
+    path: `/api/auth/login`,
     body: req,
   });
 }
@@ -25,7 +25,7 @@ export async function login(req: LoginRequest): Promise<TokenResponse> {
 export async function fetchCurrentUser(): Promise<CurrentUser> {
   return request<CurrentUser>({
     method: "GET",
-    path: `/auth/me`,
+    path: `/api/auth/me`,
   });
 }
 

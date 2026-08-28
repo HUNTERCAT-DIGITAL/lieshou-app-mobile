@@ -27,7 +27,7 @@ describe("mobile approval service", () => {
   it("listApprovals 无参数 → GET /approvals", async () => {
     mockRequest.mockResolvedValue([]);
     await listApprovals();
-    expect(mockRequest).toHaveBeenCalledWith({ method: "GET", path: "/approvals", query: {} });
+    expect(mockRequest).toHaveBeenCalledWith({ method: "GET", path: "/api/approvals", query: {} });
   });
 
   it("listApprovals 带 role/status/type → query", async () => {
@@ -35,7 +35,7 @@ describe("mobile approval service", () => {
     await listApprovals({ role: "inbox", status: "PENDING", type: "EXPENSE" });
     expect(mockRequest).toHaveBeenCalledWith({
       method: "GET",
-      path: "/approvals",
+      path: "/api/approvals",
       query: { role: "inbox", status: "PENDING", type: "EXPENSE" },
     });
   });
@@ -43,7 +43,7 @@ describe("mobile approval service", () => {
   it("getApprovalCounts → GET /approvals/counts", async () => {
     mockRequest.mockResolvedValue({ inbox: 3, mine: 1 });
     await expect(getApprovalCounts()).resolves.toEqual({ inbox: 3, mine: 1 });
-    expect(mockRequest).toHaveBeenCalledWith({ method: "GET", path: "/approvals/counts" });
+    expect(mockRequest).toHaveBeenCalledWith({ method: "GET", path: "/api/approvals/counts" });
   });
 
   it("createApproval body 透传", async () => {
@@ -51,7 +51,7 @@ describe("mobile approval service", () => {
     await createApproval({ type: "PURCHASE", title: "采购原料", approverId: 10 });
     expect(mockRequest).toHaveBeenCalledWith({
       method: "POST",
-      path: "/approvals",
+      path: "/api/approvals",
       body: { type: "PURCHASE", title: "采购原料", approverId: 10 },
     });
   });
@@ -59,7 +59,7 @@ describe("mobile approval service", () => {
   it("approveApproval → POST /approvals/{id}/approve（空 body）", async () => {
     mockRequest.mockResolvedValue({ id: 1, status: "APPROVED" });
     await approveApproval(1);
-    expect(mockRequest).toHaveBeenCalledWith({ method: "POST", path: "/approvals/1/approve", body: {} });
+    expect(mockRequest).toHaveBeenCalledWith({ method: "POST", path: "/api/approvals/1/approve", body: {} });
   });
 
   it("rejectApproval → POST /approvals/{id}/reject（comment 必填）", async () => {
@@ -67,7 +67,7 @@ describe("mobile approval service", () => {
     await rejectApproval(1, "金额超预算");
     expect(mockRequest).toHaveBeenCalledWith({
       method: "POST",
-      path: "/approvals/1/reject",
+      path: "/api/approvals/1/reject",
       body: { comment: "金额超预算" },
     });
   });
@@ -75,7 +75,7 @@ describe("mobile approval service", () => {
   it("cancelApproval → POST /approvals/{id}/cancel", async () => {
     mockRequest.mockResolvedValue({ id: 1 });
     await cancelApproval(1);
-    expect(mockRequest).toHaveBeenCalledWith({ method: "POST", path: "/approvals/1/cancel", body: {} });
+    expect(mockRequest).toHaveBeenCalledWith({ method: "POST", path: "/api/approvals/1/cancel", body: {} });
   });
 
   it("类型/状态元数据", () => {

@@ -37,17 +37,17 @@ export async function listApprovals(params?: {
   if (params?.role) query.role = params.role;
   if (params?.status) query.status = params.status;
   if (params?.type) query.type = params.type;
-  return request<ApprovalRequest[]>({ method: "GET", path: "/approvals", query });
+  return request<ApprovalRequest[]>({ method: "GET", path: "/api/approvals", query });
 }
 
 /** 待办计数（inbox=待我审批 / mine=我发起待处理） */
 export async function getApprovalCounts(): Promise<ApprovalCounts> {
-  return request<ApprovalCounts>({ method: "GET", path: "/approvals/counts" });
+  return request<ApprovalCounts>({ method: "GET", path: "/api/approvals/counts" });
 }
 
 /** 详情（租户内，404 = 不存在或非本租户） */
 export async function getApproval(id: number): Promise<ApprovalRequest> {
-  return request<ApprovalRequest>({ method: "GET", path: `/approvals/${id}` });
+  return request<ApprovalRequest>({ method: "GET", path: `/api/approvals/${id}` });
 }
 
 /** 发起审批 */
@@ -58,22 +58,22 @@ export async function createApproval(body: {
   detail?: string;
   approverId: number;
 }): Promise<ApprovalRequest> {
-  return request<ApprovalRequest>({ method: "POST", path: "/approvals", body });
+  return request<ApprovalRequest>({ method: "POST", path: "/api/approvals", body });
 }
 
 /** 通过（仅审批人） */
 export async function approveApproval(id: number): Promise<ApprovalRequest> {
-  return request<ApprovalRequest>({ method: "POST", path: `/approvals/${id}/approve`, body: {} });
+  return request<ApprovalRequest>({ method: "POST", path: `/api/approvals/${id}/approve`, body: {} });
 }
 
 /** 驳回（仅审批人，comment 必填） */
 export async function rejectApproval(id: number, comment: string): Promise<ApprovalRequest> {
-  return request<ApprovalRequest>({ method: "POST", path: `/approvals/${id}/reject`, body: { comment } });
+  return request<ApprovalRequest>({ method: "POST", path: `/api/approvals/${id}/reject`, body: { comment } });
 }
 
 /** 撤销（仅发起人） */
 export async function cancelApproval(id: number): Promise<ApprovalRequest> {
-  return request<ApprovalRequest>({ method: "POST", path: `/approvals/${id}/cancel`, body: {} });
+  return request<ApprovalRequest>({ method: "POST", path: `/api/approvals/${id}/cancel`, body: {} });
 }
 
 /** 类型 → 中文/颜色 */

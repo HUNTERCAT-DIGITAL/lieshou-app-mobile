@@ -29,7 +29,7 @@ describe("mobile lead service", () => {
   it("listLeads 无参 → GET /leads", async () => {
     mockRequest.mockResolvedValue([]);
     await listLeads();
-    expect(mockRequest).toHaveBeenCalledWith({ method: "GET", path: "/leads", query: {} });
+    expect(mockRequest).toHaveBeenCalledWith({ method: "GET", path: "/api/leads", query: {} });
   });
 
   it("listLeads 带 status/owner/keyword → query", async () => {
@@ -37,7 +37,7 @@ describe("mobile lead service", () => {
     await listLeads({ status: "FOLLOWING", owner: -1, keyword: "李" });
     expect(mockRequest).toHaveBeenCalledWith({
       method: "GET",
-      path: "/leads",
+      path: "/api/leads",
       query: { status: "FOLLOWING", owner: -1, keyword: "李" },
     });
   });
@@ -45,7 +45,7 @@ describe("mobile lead service", () => {
   it("getLead → GET /leads/{id}", async () => {
     mockRequest.mockResolvedValue({ id: 1 });
     await getLead(1);
-    expect(mockRequest).toHaveBeenCalledWith({ method: "GET", path: "/leads/1" });
+    expect(mockRequest).toHaveBeenCalledWith({ method: "GET", path: "/api/leads/1" });
   });
 
   it("createLead body 透传", async () => {
@@ -53,7 +53,7 @@ describe("mobile lead service", () => {
     await createLead({ name: "星辰科技", source: "CHANNEL" });
     expect(mockRequest).toHaveBeenCalledWith({
       method: "POST",
-      path: "/leads",
+      path: "/api/leads",
       body: { name: "星辰科技", source: "CHANNEL" },
     });
   });
@@ -61,25 +61,25 @@ describe("mobile lead service", () => {
   it("assignLead → POST /leads/{id}/assign", async () => {
     mockRequest.mockResolvedValue({ id: 1 });
     await assignLead(1);
-    expect(mockRequest).toHaveBeenCalledWith({ method: "POST", path: "/leads/1/assign", body: {} });
+    expect(mockRequest).toHaveBeenCalledWith({ method: "POST", path: "/api/leads/1/assign", body: {} });
   });
 
   it("releaseLead → POST /leads/{id}/release", async () => {
     mockRequest.mockResolvedValue({ id: 1 });
     await releaseLead(1);
-    expect(mockRequest).toHaveBeenCalledWith({ method: "POST", path: "/leads/1/release", body: {} });
+    expect(mockRequest).toHaveBeenCalledWith({ method: "POST", path: "/api/leads/1/release", body: {} });
   });
 
   it("convertLead → POST /leads/{id}/convert", async () => {
     mockRequest.mockResolvedValue({ id: 1 });
     await convertLead(1);
-    expect(mockRequest).toHaveBeenCalledWith({ method: "POST", path: "/leads/1/convert", body: {} });
+    expect(mockRequest).toHaveBeenCalledWith({ method: "POST", path: "/api/leads/1/convert", body: {} });
   });
 
   it("listLeadFollowUps → GET /leads/{id}/follow-ups", async () => {
     mockRequest.mockResolvedValue([]);
     await listLeadFollowUps(1);
-    expect(mockRequest).toHaveBeenCalledWith({ method: "GET", path: "/leads/1/follow-ups" });
+    expect(mockRequest).toHaveBeenCalledWith({ method: "GET", path: "/api/leads/1/follow-ups" });
   });
 
   it("addLeadFollowUp body 透传", async () => {
@@ -87,7 +87,7 @@ describe("mobile lead service", () => {
     await addLeadFollowUp(1, { type: "PHONE", content: "客户有意向" });
     expect(mockRequest).toHaveBeenCalledWith({
       method: "POST",
-      path: "/leads/1/follow-ups",
+      path: "/api/leads/1/follow-ups",
       body: { type: "PHONE", content: "客户有意向" },
     });
   });

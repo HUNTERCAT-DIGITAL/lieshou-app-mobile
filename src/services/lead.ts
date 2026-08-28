@@ -56,41 +56,41 @@ export async function listLeads(params?: {
   if (params?.status) query.status = params.status;
   if (params?.owner !== undefined) query.owner = params.owner;
   if (params?.keyword) query.keyword = params.keyword;
-  return request<Lead[]>({ method: "GET", path: "/leads", query });
+  return request<Lead[]>({ method: "GET", path: "/api/leads", query });
 }
 
 export async function getLead(id: number): Promise<Lead> {
-  return request<Lead>({ method: "GET", path: `/leads/${id}` });
+  return request<Lead>({ method: "GET", path: `/api/leads/${id}` });
 }
 
 export async function createLead(body: CreateLeadBody): Promise<Lead> {
-  return request<Lead>({ method: "POST", path: "/leads", body });
+  return request<Lead>({ method: "POST", path: "/api/leads", body });
 }
 
 /** 认领（给自己） */
 export async function assignLead(id: number): Promise<Lead> {
-  return request<Lead>({ method: "POST", path: `/leads/${id}/assign`, body: {} });
+  return request<Lead>({ method: "POST", path: `/api/leads/${id}/assign`, body: {} });
 }
 
 /** 释放到公海 */
 export async function releaseLead(id: number): Promise<Lead> {
-  return request<Lead>({ method: "POST", path: `/leads/${id}/release`, body: {} });
+  return request<Lead>({ method: "POST", path: `/api/leads/${id}/release`, body: {} });
 }
 
 /** 转为客户 */
 export async function convertLead(id: number): Promise<Lead> {
-  return request<Lead>({ method: "POST", path: `/leads/${id}/convert`, body: {} });
+  return request<Lead>({ method: "POST", path: `/api/leads/${id}/convert`, body: {} });
 }
 
 export async function listLeadFollowUps(id: number): Promise<LeadFollowUp[]> {
-  return request<LeadFollowUp[]>({ method: "GET", path: `/leads/${id}/follow-ups` });
+  return request<LeadFollowUp[]>({ method: "GET", path: `/api/leads/${id}/follow-ups` });
 }
 
 export async function addLeadFollowUp(
   id: number,
   body: { type: FollowUpType; content: string; nextFollowUpAt?: string },
 ): Promise<LeadFollowUp> {
-  return request<LeadFollowUp>({ method: "POST", path: `/leads/${id}/follow-ups`, body });
+  return request<LeadFollowUp>({ method: "POST", path: `/api/leads/${id}/follow-ups`, body });
 }
 
 /** 状态 → 中文/颜色 */

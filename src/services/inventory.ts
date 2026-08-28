@@ -29,7 +29,7 @@ export interface StockMovement {
 export async function listProducts(keyword?: string): Promise<Product[]> {
   const query: Record<string, string> = {};
   if (keyword) query.keyword = keyword;
-  return request<Product[]>({ method: "GET", path: `/products`, query });
+  return request<Product[]>({ method: "GET", path: `/api/products`, query });
 }
 
 export async function createProduct(body: {
@@ -39,15 +39,15 @@ export async function createProduct(body: {
   price?: number;
   remark?: string;
 }): Promise<Product> {
-  return request<Product>({ method: "POST", path: `/products`, body });
+  return request<Product>({ method: "POST", path: `/api/products`, body });
 }
 
 export async function stockIn(id: number, quantity: number, remark?: string): Promise<Product> {
-  return request<Product>({ method: "POST", path: `/products/${id}/stock-in`, body: { quantity, remark } });
+  return request<Product>({ method: "POST", path: `/api/products/${id}/stock-in`, body: { quantity, remark } });
 }
 
 export async function stockOut(id: number, quantity: number, remark?: string): Promise<Product> {
-  return request<Product>({ method: "POST", path: `/products/${id}/stock-out`, body: { quantity, remark } });
+  return request<Product>({ method: "POST", path: `/api/products/${id}/stock-out`, body: { quantity, remark } });
 }
 
 export const MOVEMENT_META: Record<StockMovementType, { text: string; color: string }> = {

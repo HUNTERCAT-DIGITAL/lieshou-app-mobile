@@ -19,20 +19,20 @@ describe("mobile finance service", () => {
   it("listLedger → GET /ledger", async () => {
     mockRequest.mockResolvedValue([]);
     await listLedger();
-    expect(mockRequest).toHaveBeenCalledWith({ method: "GET", path: "/ledger" });
+    expect(mockRequest).toHaveBeenCalledWith({ method: "GET", path: "/api/ledger" });
   });
 
   it("getSummary → GET /ledger/summary", async () => {
     mockRequest.mockResolvedValue({ income: 1, expense: 2, balance: -1, count: 1 });
     await expect(getSummary()).resolves.toMatchObject({ balance: -1 });
-    expect(mockRequest).toHaveBeenCalledWith({ method: "GET", path: "/ledger/summary" });
+    expect(mockRequest).toHaveBeenCalledWith({ method: "GET", path: "/api/ledger/summary" });
   });
 
   it("createLedger → POST /ledger + body 透传", async () => {
     mockRequest.mockResolvedValue({ id: 2 });
     const body = { type: "EXPENSE" as const, amount: 88, category: "房租", occurredAt: "2026-08-01" };
     await createLedger(body);
-    expect(mockRequest).toHaveBeenCalledWith({ method: "POST", path: "/ledger", body });
+    expect(mockRequest).toHaveBeenCalledWith({ method: "POST", path: "/api/ledger", body });
   });
 
   it("分类元数据", () => {
@@ -46,7 +46,7 @@ describe("mobile inventory service", () => {
     await listProducts("布洛芬");
     expect(mockRequest).toHaveBeenCalledWith({
       method: "GET",
-      path: "/products",
+      path: "/api/products",
       query: { keyword: "布洛芬" },
     });
   });
@@ -56,7 +56,7 @@ describe("mobile inventory service", () => {
     await stockIn(1, 5, "补货");
     expect(mockRequest).toHaveBeenCalledWith({
       method: "POST",
-      path: "/products/1/stock-in",
+      path: "/api/products/1/stock-in",
       body: { quantity: 5, remark: "补货" },
     });
   });
@@ -66,7 +66,7 @@ describe("mobile inventory service", () => {
     await stockOut(1, 3);
     expect(mockRequest).toHaveBeenCalledWith({
       method: "POST",
-      path: "/products/1/stock-out",
+      path: "/api/products/1/stock-out",
       body: { quantity: 3, remark: undefined },
     });
   });

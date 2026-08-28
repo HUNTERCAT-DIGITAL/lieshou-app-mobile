@@ -14,7 +14,7 @@ export interface TenantUser {
 
 /** 租户内用户列表（仅本租户，后端强制过滤） */
 export async function listUsers(): Promise<TenantUser[]> {
-  return request<TenantUser[]>({ method: "GET", path: "/users" });
+  return request<TenantUser[]>({ method: "GET", path: "/api/users" });
 }
 
 /** 展示名：displayName 优先，回落 username */

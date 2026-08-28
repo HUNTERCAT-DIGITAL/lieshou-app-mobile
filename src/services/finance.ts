@@ -23,11 +23,11 @@ export interface LedgerSummary {
 }
 
 export async function listLedger(): Promise<LedgerEntry[]> {
-  return request<LedgerEntry[]>({ method: "GET", path: `/ledger` });
+  return request<LedgerEntry[]>({ method: "GET", path: `/api/ledger` });
 }
 
 export async function getSummary(): Promise<LedgerSummary> {
-  return request<LedgerSummary>({ method: "GET", path: `/ledger/summary` });
+  return request<LedgerSummary>({ method: "GET", path: `/api/ledger/summary` });
 }
 
 export async function createLedger(body: {
@@ -37,7 +37,7 @@ export async function createLedger(body: {
   occurredAt: string;
   remark?: string;
 }): Promise<LedgerEntry> {
-  return request<LedgerEntry>({ method: "POST", path: `/ledger`, body });
+  return request<LedgerEntry>({ method: "POST", path: `/api/ledger`, body });
 }
 
 export const LEDGER_TYPE_META: Record<LedgerType, { text: string; color: string }> = {

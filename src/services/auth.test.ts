@@ -18,7 +18,7 @@ describe("mobile auth service", () => {
     await login({ username: "admin", password: "admin123" });
     expect(mockRequest).toHaveBeenCalledWith({
       method: "POST",
-      path: "/auth/login",
+      path: "/api/auth/login",
       body: { username: "admin", password: "admin123" },
     });
   });
@@ -28,7 +28,7 @@ describe("mobile auth service", () => {
     await login({ username: "admin", password: "admin123", tenantCode: "huntercat" });
     expect(mockRequest).toHaveBeenCalledWith({
       method: "POST",
-      path: "/auth/login",
+      path: "/api/auth/login",
       body: { username: "admin", password: "admin123", tenantCode: "huntercat" },
     });
   });
@@ -40,7 +40,7 @@ describe("mobile auth service", () => {
       username: "admin",
       roles: ["USER"],
     });
-    expect(mockRequest).toHaveBeenCalledWith({ method: "GET", path: "/auth/me" });
+    expect(mockRequest).toHaveBeenCalledWith({ method: "GET", path: "/api/auth/me" });
   });
 
   it("isApiError 识别带 status 的 Error", () => {

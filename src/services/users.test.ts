@@ -17,7 +17,7 @@ describe("mobile users service", () => {
   it("listUsers → GET /users", async () => {
     mockRequest.mockResolvedValue([{ id: 1, username: "admin" }]);
     await expect(listUsers()).resolves.toEqual([{ id: 1, username: "admin" }]);
-    expect(mockRequest).toHaveBeenCalledWith({ method: "GET", path: "/users" });
+    expect(mockRequest).toHaveBeenCalledWith({ method: "GET", path: "/api/users" });
   });
 
   it("userDisplayName 优先 displayName", () => {
