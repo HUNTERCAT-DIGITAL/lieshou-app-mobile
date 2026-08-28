@@ -12,10 +12,9 @@ import { MobileHealthBadge } from "../../src/components/MobileHealthBadge";
 import { RoleBadge } from "../../src/components/MobileUI";
 import { EVENTS, track } from "../../src/services/analytics";
 import { fetchGatewayHealth } from "../../src/services/api";
+import type { HealthStatus } from "@lieshoucloud/contract-types";
 import { useAuthStore } from "../../src/stores/auth";
 import { colors } from "../../src/theme/colors";
-
-type HealthStatus = "up" | "down" | "degraded";
 
 export default function Profile() {
   const router = useRouter();
