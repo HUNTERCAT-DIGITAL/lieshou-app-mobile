@@ -38,6 +38,24 @@
 - 2026-09 组合化重构铺开：core-web 已提供 auth/approval/workbench，本地实现持续上收
 - 客户 dwjk（iot）5 tab 由 EXTRA_TABS 注入；web 端 SPA + 同源 API（nginx /api → gateway）
 
+## mobile 上收 core-web 路线图（2026-09-10 评估）
+
+core-web 已含 18 个 feature（cca4388）：approval/audit/auth/contact/contract/crm/customer-success/dispatch/member/quality/role/supply/teacher/tenant/user/workbench。mobile 对齐后：
+
+| mobile services | core-web 对应 | 状态 |
+| --- | --- | --- |
+| approval | features/approval/approval.api.ts | ✅ 签名一致可薄壳化（approve 可选 body；类型用 contract-types/business/approval） |
+| customer | features/crm/crm.api.ts | ✅ 签名一致（listCustomers(keyword,status)）可薄壳化 |
+| users | features/user/user.api.ts | ⚠️ 类型不同（TenantUser vs User）需适配 |
+| finance/inventory/lead | 无 | ❌ 需 core-web 新增 feature（专项） |
+
+**上收前置**（每个 service 逐一核对）：
+1. 函数签名/返回类型与 core-web 兼容（类型用 contract-types，弃本地接口）
+2. UI 辅助（APPROVAL_TYPE_META / STATUS_META / ApiError 扩展 / userDisplayName）core-web 不提供——决策：上收 core-web 或留端壳本地
+3. 页面 import 从 `src/services/*` 改 core-web（或 services 保留 re-export 兼容页）
+
+模式参照 admin-web：services/xx.ts 变薄 re-export + 新测试文件测 ApiPort 透传（全路径带 /api 前缀）。
+
 ## 待办
 - [ ] 推送上一次修复提交（1143e7e）
 
