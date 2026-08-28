@@ -13,3 +13,9 @@
 [submodule "open/core-web"]
 	path = open/core-web
 	url = git@github.com:HUNTERCAT-DIGITAL/lieshou-core-web.git
+[submodule "open/ui-native"]
+	path = open/ui-native
+	url = git@github.com:HUNTERCAT-DIGITAL/lieshou-ui-native.git
+[submodule "open/hooks"]
+	path = open/hooks
+	url = git@github.com:HUNTERCAT-DIGITAL/lieshou-hooks.git

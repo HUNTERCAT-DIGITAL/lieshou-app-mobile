@@ -1,3 +1,6 @@
+import { useEffect, useState } from "react";
+import { ActivityIndicator, StyleSheet, View } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Stack, router, type Href } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { configureCore, useAuthStore } from "@lieshoucloud/core-web";
@@ -5,6 +8,23 @@ import { setAccessTokenProvider, setRefreshTokensProvider } from "@lieshoucloud/
 
 import { RootGate } from "../src/components/RootGate";
 import { apiBaseUrl } from "../src/services/api";
+
+// —— 会话持久化：AsyncStorage（异步）→ 启动预载同步内存缓存（StoragePort 同步契约）——
+// RN 无 localStorage：此前 storage 端口回落 localStorage 导致会话无法持久化（冷启动丢失登录态）。
+// core-web auth store 采用 skipHydration，预载完成后显式 rehydrate 恢复会话。
+const storageCache = new Map<string, string>();
+
+async function hydrateStorage(): Promise<void> {
+  try {
+    const keys = await AsyncStorage.getAllKeys();
+    const pairs = await AsyncStorage.multiGet(keys);
+    for (const [k, v] of pairs) {
+      if (v != null) storageCache.set(k, v);
+    }
+  } catch (e) {
+    console.warn("[mobile] hydrateStorage failed:", e);
+  }
+}
 
 // contract-api request 自动附加 Bearer（客户包 @lieshoucloud/dwjk 的 API 走 contract-api request）
 setAccessTokenProvider(() => useAuthStore.getState().accessToken);
@@ -21,9 +41,15 @@ setRefreshTokensProvider(async () => {
 // —— 注入 core-web 端口（业务核心层 · 2026-09 铺开）——
 configureCore({
   storage: {
-    get: (k) => (typeof localStorage !== "undefined" ? localStorage.getItem(k) : null),
-    set: (k, v) => localStorage?.setItem(k, v),
-    remove: (k) => localStorage?.removeItem(k),
+    get: (k) => storageCache.get(k) ?? null,
+    set: (k, v) => {
+      storageCache.set(k, v);
+      void AsyncStorage.setItem(k, v).catch(() => {});
+    },
+    remove: (k) => {
+      storageCache.delete(k);
+      void AsyncStorage.removeItem(k).catch(() => {});
+    },
   },
   notifier: {
     success: () => {},
@@ -65,6 +91,31 @@ configureCore({
  * @see .ai/decisions/0013-mobile-app.md
  */
 export default function RootLayout() {
+  const [hydrated, setHydrated] = useState(false);
+
+  // 启动预载 AsyncStorage → 显式恢复 core-web 会话（skipHydration 模式）
+  useEffect(() => {
+    let cancelled = false;
+    void (async () => {
+      await hydrateStorage();
+      if (cancelled) return;
+      await useAuthStore.persist.rehydrate();
+      if (!cancelled) setHydrated(true);
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  // 会话恢复完成前显示 splash，避免 RootGate 误判未登录跳 /login
+  if (!hydrated) {
+    return (
+      <View style={styles.splash}>
+        <ActivityIndicator size="large" color="#1677ff" />
+      </View>
+    );
+  }
+
   return (
     <RootGate>
       <Stack
@@ -81,3 +132,12 @@ export default function RootLayout() {
     </RootGate>
   );
 }
+
+const styles = StyleSheet.create({
+  splash: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#1677ff",
+  },
+});
