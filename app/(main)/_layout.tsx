@@ -9,6 +9,7 @@
 import { Tabs, useRouter } from "expo-router";
 import { StyleSheet, Text, View, type ColorValue } from "react-native";
 
+import { EXTRA_HIDDEN } from "../../src/config/editions/extra";
 import { getIndustryId } from "../../src/config/industry";
 import { getWorkbench } from "../../src/config/workbench";
 import { useResponsive } from "../../src/hooks/useResponsive";
@@ -81,12 +82,15 @@ export default function MainLayout() {
           }}
         />
       ))}
-      {/* 通用路由：不在工作台 items 中的一律隐藏（含详情页，避免 expo-router 默认全部显示为 tab） */}
-      {GENERIC_MAIN_ROUTES.filter((name) => !workbench.items.some((i) => i.key === name)).map(
-        (name) => (
+      {/* 通用路由：不在工作台 items 中的一律隐藏（含详情页，避免 expo-router 默认全部显示为 tab）
+       * 注意：href:null 只能由布局层 Tabs.Screen 声明生效（withLayoutContext 处理），
+       * 页面内 <Tabs.Screen options={{href:null}}/> 走 setOptions 不会隐藏 tab——
+       * 因此客户注入的非 tab 路由（EXTRA_HIDDEN，prepare 生成的 extra.ts）也必须在这里声明。 */}
+      {[...GENERIC_MAIN_ROUTES, ...EXTRA_HIDDEN]
+        .filter((name) => !workbench.items.some((i) => i.key === name))
+        .map((name) => (
           <Tabs.Screen key={name} name={name} options={{ href: null }} />
-        ),
-      )}
+        ))}
     </Tabs>
   );
 }
