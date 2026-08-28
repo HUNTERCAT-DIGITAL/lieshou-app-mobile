@@ -5,8 +5,10 @@
  */
 import { useEffect, useState } from "react";
 import { RefreshControl, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { useRouter } from "expo-router";
+import { Redirect, useRouter } from "expo-router";
 
+import { getIndustryId } from "../../src/config/industry";
+import { getWorkbench } from "../../src/config/workbench";
 import { EmptyState, RoleBadge } from "../../src/components/MobileUI";
 import { countCustomers, listCustomers, STATUS_META, type Customer } from "../../src/services/customer";
 import { getApprovalCounts } from "../../src/services/approval";
@@ -30,6 +32,11 @@ interface Metrics {
 
 export default function Workbench() {
   const router = useRouter();
+  // 行业专属工作台：iot → /dwjk/workspace（纯 IoT）；generic/其他保留经营看板
+  const wb = getWorkbench(getIndustryId());
+  if (wb.home && wb.home !== "/") {
+    return <Redirect href={wb.home as never} />;
+  }
   const user = useAuthStore((s) => s.user);
   const [loading, setLoading] = useState(false);
   const [metrics, setMetrics] = useState<Metrics>({
