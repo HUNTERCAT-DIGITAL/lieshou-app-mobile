@@ -11,10 +11,31 @@ import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 import { colors } from "../theme/colors";
 
-/** 状态徽章：彩色背景 + 文字。色板与 admin STATUS_META 对齐 */
+/** antd 色板 token → RN 合法颜色（contract-types META 的 color 面向 antd；RN backgroundColor 需 hex/命名色） */
+const ANTD_COLOR_MAP: Record<string, string> = {
+  default: "#8c8c8c",
+  primary: "#1677ff",
+  processing: "#1677ff",
+  success: "#52c41a",
+  warning: "#faad14",
+  error: "#f5222d",
+  volcano: "#fa541c",
+  blue: "#1677ff",
+  gold: "#faad14",
+  green: "#52c41a",
+  red: "#f5222d",
+  orange: "#fa8c16",
+};
+
+/** antd token → hex；hex/命名色原样透传 */
+function resolveColor(color: string): string {
+  return ANTD_COLOR_MAP[color] ?? color;
+}
+
+/** 状态徽章：彩色背景 + 文字。色板与 admin STATUS_META 对齐（token 经 resolveColor 归一为 RN 合法色） */
 export function StatusBadge({ text, color }: { text: string; color: string }): ReactNode {
   return (
-    <View style={[styles.badge, { backgroundColor: color }]}>
+    <View style={[styles.badge, { backgroundColor: resolveColor(color) }]}>
       <Text style={styles.badgeText}>{text}</Text>
     </View>
   );
