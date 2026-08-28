@@ -1,54 +1,54 @@
 /**
- * Mobile customer service 单测（P0 · 三端补测试）.
+ * Mobile customer service 单测（P0 · 2026-09 上收 core-web 后测 ApiPort 传输）.
  *
- * mobile 的 request 用 query 对象形式（不同于 desktop 的字符串拼 query）。
- * 注意：不能 jest.mock("@lieshoucloud/contract-api")——moduleNameMapper 把该
- * 包映射到 packages/api-client/src（jest.mock 按原 specifier 注册不匹配）。
- * 改用 jest.spyOn 命名空间对象（babel CJS 编译后是 _apiClient.request 属性访问）。
+ * services/customer.ts 为 core-web 薄 re-export，实现走 requestApi → 注入的 ApiPort。
+ * 注入 portRequest spy，验证 URL path / query 透传（全路径带 /api 前缀）。
  */
-
-import * as apiClient from "@lieshoucloud/contract-api";
+import { configureCore } from "@lieshoucloud/core-web";
 
 import { STATUS_META, countCustomers, getCustomer, listCustomers } from "./customer";
 
-const mockRequest = jest.spyOn(apiClient, "request");
+const portRequest = jest.fn();
 
 beforeEach(() => {
-  mockRequest.mockReset();
-  mockRequest.mockResolvedValue(undefined as never);
+  portRequest.mockReset();
+  configureCore({
+    storage: { get: () => null, set: () => {}, remove: () => {} },
+    notifier: { success: () => {}, error: () => {} },
+    navigation: { to: () => {}, replace: () => {} },
+    api: { request: portRequest },
+  });
 });
 
-describe("mobile customer service", () => {
-  it("listCustomers 无参数 → GET /customers（query 空对象）", async () => {
-    mockRequest.mockResolvedValue([]);
+describe("mobile customer service（core-web 上收 · ApiPort 传输）", () => {
+  it("listCustomers 无参数 → GET /api/customers", async () => {
+    portRequest.mockResolvedValue([]);
     await listCustomers();
-    expect(mockRequest).toHaveBeenCalledWith({ method: "GET", path: "/api/customers", query: {} });
+    expect(portRequest).toHaveBeenCalledWith("/api/customers", undefined);
   });
 
-  it("listCustomers 带 keyword + status → query 对象", async () => {
-    mockRequest.mockResolvedValue([]);
+  it("listCustomers 带 keyword + status → query 透传", async () => {
+    portRequest.mockResolvedValue([]);
     await listCustomers("张", "FOLLOWING");
-    expect(mockRequest).toHaveBeenCalledWith({
-      method: "GET",
-      path: "/api/customers",
-      query: { keyword: "张", status: "FOLLOWING" },
-    });
+    expect(portRequest).toHaveBeenCalledWith(
+      "/api/customers?keyword=%E5%BC%A0&status=FOLLOWING",
+      undefined,
+    );
   });
 
-  it("countCustomers → GET /customers/count", async () => {
-    mockRequest.mockResolvedValue(12);
+  it("countCustomers → GET /api/customers/count", async () => {
+    portRequest.mockResolvedValue(12);
     await expect(countCustomers()).resolves.toBe(12);
-    expect(mockRequest).toHaveBeenCalledWith({ method: "GET", path: "/api/customers/count" });
+    expect(portRequest).toHaveBeenCalledWith("/api/customers/count", undefined);
   });
 
-  it("getCustomer 动态 id", async () => {
-    mockRequest.mockResolvedValue({ id: 5 });
-    await getCustomer(5);
-    expect(mockRequest).toHaveBeenCalledWith({ method: "GET", path: "/api/customers/5" });
+  it("getCustomer → GET /api/customers/{id}", async () => {
+    portRequest.mockResolvedValue({ id: 7 });
+    await getCustomer(7);
+    expect(portRequest).toHaveBeenCalledWith("/api/customers/7", undefined);
   });
 
-  it("STATUS_META 四状态齐全", () => {
-    expect(Object.keys(STATUS_META)).toEqual(["NEW", "FOLLOWING", "CONVERTED", "LOST"]);
-    expect(STATUS_META.LOST.text).toBe("已流失");
+  it("STATUS_META 来自 contract-types（薄壳 re-export）", () => {
+    expect(STATUS_META.NEW.text).toBe("新客户");
   });
 });
