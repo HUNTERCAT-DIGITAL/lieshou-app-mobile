@@ -23,6 +23,21 @@ const NON_TAB_SCREENS = [
   "profile",
 ];
 
+/**
+ * (main) 下全部通用路由（端壳模板 · 不含客户注入路由）.
+ * expo-router Tabs 默认把 app/(main)/ 下所有路由都渲染为底部 tab；
+ * 这里把「不在工作台 items 中」的路由显式隐藏——底部 tab 只由工作台配置驱动。
+ */
+const GENERIC_MAIN_ROUTES = [
+  "index",
+  "customers",
+  "leads",
+  "inventory",
+  "finance",
+  "approval",
+  ...NON_TAB_SCREENS,
+];
+
 export default function MainLayout() {
   const router = useRouter();
   const { isTablet, contentPadding } = useResponsive();
@@ -66,10 +81,12 @@ export default function MainLayout() {
           }}
         />
       ))}
-      {/* 详情页/特殊页：仅栈内导航 */}
-      {NON_TAB_SCREENS.map((name) => (
-        <Tabs.Screen key={name} name={name} options={{ href: null }} />
-      ))}
+      {/* 通用路由：不在工作台 items 中的一律隐藏（含详情页，避免 expo-router 默认全部显示为 tab） */}
+      {GENERIC_MAIN_ROUTES.filter((name) => !workbench.items.some((i) => i.key === name)).map(
+        (name) => (
+          <Tabs.Screen key={name} name={name} options={{ href: null }} />
+        ),
+      )}
     </Tabs>
   );
 }
