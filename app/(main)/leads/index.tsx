@@ -22,8 +22,8 @@ import {
   LEAD_STATUS_META,
   createLead,
   listLeads,
-  type CreateLeadBody,
   type Lead,
+  type LeadRequest,
   type LeadSource,
 } from "../../../src/services/lead";
 import { useAuthStore } from "../../../src/stores/auth";
@@ -52,7 +52,7 @@ export default function LeadList() {
     setLoading(true);
     try {
       const owner = seg === "mine" ? (me?.userId ?? 0) : seg === "pool" ? -1 : 0;
-      const list = await listLeads({ owner, keyword: kw || undefined });
+      const list = await listLeads(kw || undefined, undefined, owner);
       setData(list);
     } catch {
       setData([]);
@@ -152,7 +152,7 @@ function CreateLeadModal({
   onClose: () => void;
   onCreated: () => void;
 }) {
-  const [form, setForm] = useState<CreateLeadBody>({ name: "" });
+  const [form, setForm] = useState<LeadRequest>({ name: "" });
   const [source, setSource] = useState<LeadSource>("MANUAL");
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");

@@ -1,100 +1,114 @@
 /**
- * Mobile lead service 单测（Phase B · 线索/公海/跟进）.
- * 同 approval.test：jest.spyOn 命名空间。
+ * Mobile lead service 单测（2026-09 上收 core-web 后测 ApiPort 传输）.
+ *
+ * services/lead.ts 为 core-web 薄 re-export，实现走 requestApi → 注入的 ApiPort。
+ * 注入 portRequest spy，验证 URL path / body 透传（全路径带 /api 前缀）。
  */
-import * as apiClient from "@lieshoucloud/contract-api";
+import { configureCore } from "@lieshoucloud/core-web";
 
 import {
-  FOLLOWUP_TYPE_META,
+  FOLLOW_UP_TYPE_META,
   LEAD_SOURCE_META,
   LEAD_STATUS_META,
-  addLeadFollowUp,
+  addFollowUp,
   assignLead,
   convertLead,
   createLead,
   getLead,
-  listLeadFollowUps,
+  listFollowUps,
   listLeads,
   releaseLead,
 } from "./lead";
 
-const mockRequest = jest.spyOn(apiClient, "request");
+const portRequest = jest.fn();
 
 beforeEach(() => {
-  mockRequest.mockReset();
-  mockRequest.mockResolvedValue(undefined as never);
+  portRequest.mockReset();
+  configureCore({
+    storage: { get: () => null, set: () => {}, remove: () => {} },
+    notifier: { success: () => {}, error: () => {} },
+    navigation: { to: () => {}, replace: () => {} },
+    api: { request: portRequest },
+  });
 });
 
-describe("mobile lead service", () => {
-  it("listLeads 无参 → GET /leads", async () => {
-    mockRequest.mockResolvedValue([]);
+const JSON_HEADERS = { "Content-Type": "application/json" };
+
+describe("mobile lead service（core-web 上收 · ApiPort 传输）", () => {
+  it("listLeads 无参 → GET /api/leads", async () => {
+    portRequest.mockResolvedValue([]);
     await listLeads();
-    expect(mockRequest).toHaveBeenCalledWith({ method: "GET", path: "/api/leads", query: {} });
+    expect(portRequest).toHaveBeenCalledWith("/api/leads", undefined);
   });
 
-  it("listLeads 带 status/owner/keyword → query", async () => {
-    mockRequest.mockResolvedValue([]);
-    await listLeads({ status: "FOLLOWING", owner: -1, keyword: "李" });
-    expect(mockRequest).toHaveBeenCalledWith({
-      method: "GET",
-      path: "/api/leads",
-      query: { status: "FOLLOWING", owner: -1, keyword: "李" },
-    });
+  it("listLeads keyword/status/owner(-1 公海) → query", async () => {
+    portRequest.mockResolvedValue([]);
+    await listLeads("华为", "NEW", -1);
+    expect(portRequest).toHaveBeenCalledWith(
+      "/api/leads?keyword=%E5%8D%8E%E4%B8%BA&status=NEW&owner=-1",
+      undefined,
+    );
   });
 
-  it("getLead → GET /leads/{id}", async () => {
-    mockRequest.mockResolvedValue({ id: 1 });
+  it("listLeads owner 缺省 0（全部）→ 不拼 owner 参数", async () => {
+    portRequest.mockResolvedValue([]);
+    await listLeads(undefined, undefined, 0);
+    expect(portRequest).toHaveBeenCalledWith("/api/leads", undefined);
+  });
+
+  it("getLead → GET /api/leads/{id}", async () => {
+    portRequest.mockResolvedValue({ id: 1 });
     await getLead(1);
-    expect(mockRequest).toHaveBeenCalledWith({ method: "GET", path: "/api/leads/1" });
+    expect(portRequest).toHaveBeenCalledWith("/api/leads/1", undefined);
   });
 
-  it("createLead body 透传", async () => {
-    mockRequest.mockResolvedValue({ id: 1 });
-    await createLead({ name: "星辰科技", source: "CHANNEL" });
-    expect(mockRequest).toHaveBeenCalledWith({
+  it("createLead → POST /api/leads + body", async () => {
+    portRequest.mockResolvedValue({ id: 1 });
+    await createLead({ name: "华为采购部", source: "CHANNEL" });
+    expect(portRequest).toHaveBeenCalledWith("/api/leads", {
       method: "POST",
-      path: "/api/leads",
-      body: { name: "星辰科技", source: "CHANNEL" },
+      headers: JSON_HEADERS,
+      body: JSON.stringify({ name: "华为采购部", source: "CHANNEL" }),
     });
   });
 
-  it("assignLead → POST /leads/{id}/assign", async () => {
-    mockRequest.mockResolvedValue({ id: 1 });
+  it("assignLead → POST /api/leads/{id}/assign", async () => {
+    portRequest.mockResolvedValue({ id: 1, ownerId: 5 });
     await assignLead(1);
-    expect(mockRequest).toHaveBeenCalledWith({ method: "POST", path: "/api/leads/1/assign", body: {} });
+    expect(portRequest).toHaveBeenCalledWith("/api/leads/1/assign", { method: "POST" });
   });
 
-  it("releaseLead → POST /leads/{id}/release", async () => {
-    mockRequest.mockResolvedValue({ id: 1 });
+  it("releaseLead → POST /api/leads/{id}/release", async () => {
+    portRequest.mockResolvedValue({ id: 1, ownerId: null });
     await releaseLead(1);
-    expect(mockRequest).toHaveBeenCalledWith({ method: "POST", path: "/api/leads/1/release", body: {} });
+    expect(portRequest).toHaveBeenCalledWith("/api/leads/1/release", { method: "POST" });
   });
 
-  it("convertLead → POST /leads/{id}/convert", async () => {
-    mockRequest.mockResolvedValue({ id: 1 });
+  it("convertLead → POST /api/leads/{id}/convert", async () => {
+    portRequest.mockResolvedValue({ id: 1, status: "CONVERTED" });
     await convertLead(1);
-    expect(mockRequest).toHaveBeenCalledWith({ method: "POST", path: "/api/leads/1/convert", body: {} });
+    expect(portRequest).toHaveBeenCalledWith("/api/leads/1/convert", { method: "POST" });
   });
 
-  it("listLeadFollowUps → GET /leads/{id}/follow-ups", async () => {
-    mockRequest.mockResolvedValue([]);
-    await listLeadFollowUps(1);
-    expect(mockRequest).toHaveBeenCalledWith({ method: "GET", path: "/api/leads/1/follow-ups" });
+  it("listFollowUps → GET /api/leads/{id}/follow-ups", async () => {
+    portRequest.mockResolvedValue([]);
+    await listFollowUps(1);
+    expect(portRequest).toHaveBeenCalledWith("/api/leads/1/follow-ups", undefined);
   });
 
-  it("addLeadFollowUp body 透传", async () => {
-    mockRequest.mockResolvedValue({ id: 9 });
-    await addLeadFollowUp(1, { type: "PHONE", content: "客户有意向" });
-    expect(mockRequest).toHaveBeenCalledWith({
+  it("addFollowUp → POST /api/leads/{id}/follow-ups + body", async () => {
+    portRequest.mockResolvedValue({ id: 9, leadId: 1 });
+    await addFollowUp(1, { type: "PHONE", content: "电话回访" });
+    expect(portRequest).toHaveBeenCalledWith("/api/leads/1/follow-ups", {
       method: "POST",
-      path: "/api/leads/1/follow-ups",
-      body: { type: "PHONE", content: "客户有意向" },
+      headers: JSON_HEADERS,
+      body: JSON.stringify({ type: "PHONE", content: "电话回访" }),
     });
   });
 
-  it("元数据完整性", () => {
+  it("META 常量来自 contract-types（薄壳 re-export）", () => {
     expect(LEAD_STATUS_META.CONVERTED.text).toBe("已转化");
     expect(LEAD_SOURCE_META.CHANNEL).toBe("渠道");
-    expect(FOLLOWUP_TYPE_META.VISIT).toBe("拜访");
+    expect(FOLLOW_UP_TYPE_META.VISIT).toBe("拜访");
   });
 });

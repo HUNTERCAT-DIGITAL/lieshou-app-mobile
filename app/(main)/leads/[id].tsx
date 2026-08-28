@@ -19,14 +19,14 @@ import {
 
 import { EmptyState, ErrorState, StatusBadge } from "../../../src/components/MobileUI";
 import {
-  FOLLOWUP_TYPE_META,
+  FOLLOW_UP_TYPE_META,
   LEAD_SOURCE_META,
   LEAD_STATUS_META,
-  addLeadFollowUp,
+  addFollowUp,
   assignLead,
   convertLead,
   getLead,
-  listLeadFollowUps,
+  listFollowUps,
   releaseLead,
   type FollowUpType,
   type Lead,
@@ -60,7 +60,7 @@ export default function LeadDetail() {
     setNotFound(false);
     setLoadError(false);
     try {
-      const [l, ups] = await Promise.all([getLead(lid), listLeadFollowUps(lid)]);
+      const [l, ups] = await Promise.all([getLead(lid), listFollowUps(lid)]);
       setLead(l);
       setFollowUps(ups);
     } catch (e) {
@@ -209,7 +209,7 @@ export default function LeadDetail() {
               <View style={styles.timelineDot} />
               <View style={styles.timelineBody}>
                 <View style={styles.timelineHeaderRow}>
-                  <Text style={styles.timelineType}>{FOLLOWUP_TYPE_META[f.type]}</Text>
+                  <Text style={styles.timelineType}>{FOLLOW_UP_TYPE_META[f.type]}</Text>
                   <Text style={styles.timelineTime}>{f.createdAt}</Text>
                 </View>
                 <Text style={styles.timelineContent}>{f.content}</Text>
@@ -266,7 +266,7 @@ function FollowUpModal({
     setSubmitting(true);
     setError("");
     try {
-      await addLeadFollowUp(leadId, { type, content: content.trim() });
+      await addFollowUp(leadId, { type, content: content.trim() });
       track(EVENTS.LEAD_FOLLOWED_UP, { leadId, type });
       onAdded();
     } catch {
@@ -284,13 +284,13 @@ function FollowUpModal({
 
           <Text style={styles.fieldLabel}>方式</Text>
           <View style={styles.chipRow}>
-            {(Object.keys(FOLLOWUP_TYPE_META) as FollowUpType[]).map((t) => (
+            {(Object.keys(FOLLOW_UP_TYPE_META) as FollowUpType[]).map((t) => (
               <TouchableOpacity
                 key={t}
                 style={[styles.chip, type === t && styles.chipActive]}
                 onPress={() => setType(t)}
               >
-                <Text style={[styles.chipText, type === t && styles.chipTextActive]}>{FOLLOWUP_TYPE_META[t]}</Text>
+                <Text style={[styles.chipText, type === t && styles.chipTextActive]}>{FOLLOW_UP_TYPE_META[t]}</Text>
               </TouchableOpacity>
             ))}
           </View>

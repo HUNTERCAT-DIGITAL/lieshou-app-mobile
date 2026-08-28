@@ -54,7 +54,7 @@ export default function Workbench() {
     try {
       const [c, leads, counts, products, fin, customers] = await Promise.all([
         countCustomers(),
-        listLeads({ owner: 0 }),
+        listLeads(),
         getApprovalCounts(),
         listProducts(),
         getSummary(),
