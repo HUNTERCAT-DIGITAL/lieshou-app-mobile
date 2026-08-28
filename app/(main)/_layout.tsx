@@ -12,33 +12,11 @@ import { StyleSheet, Text, View, type ColorValue } from "react-native";
 
 import { EXTRA_HIDDEN } from "../../src/config/editions/extra";
 import { getIndustryId } from "../../src/config/industry";
+import { GENERIC_MAIN_ROUTES } from "../../src/config/mainRoutes";
 import { getWorkbench } from "../../src/config/workbench";
 import { useResponsive } from "../../src/hooks/useResponsive";
 import { useAuthStore } from "../../src/stores/auth";
 import { colors } from "../../src/theme/colors";
-
-/** 详情页/特殊页：不生成 Tab（仅栈内导航） */
-const NON_TAB_SCREENS = [
-  "customers/[id]",
-  "leads/[id]",
-  "approval/[id]",
-  "profile",
-];
-
-/**
- * (main) 下全部通用路由（端壳模板 · 不含客户注入路由）.
- * expo-router Tabs 默认把 app/(main)/ 下所有路由都渲染为底部 tab；
- * 这里把「不在工作台 items 中」的路由显式隐藏——底部 tab 只由工作台配置驱动。
- */
-const GENERIC_MAIN_ROUTES = [
-  "index",
-  "customers",
-  "leads",
-  "inventory",
-  "finance",
-  "approval",
-  ...NON_TAB_SCREENS,
-];
 
 export default function MainLayout() {
   const router = useRouter();
