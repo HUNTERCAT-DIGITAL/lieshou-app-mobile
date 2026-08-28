@@ -26,3 +26,10 @@ export const EXTRA_TABS: ClientTab[] = [];
  * 注意只能由布局层声明生效，页面内 <Tabs.Screen options={{href:null}}/>（setOptions）无效。
  */
 export const EXTRA_HIDDEN: string[] = [];
+
+/**
+ * 客户 API 基址覆盖（可空）。
+ * 客户仓 deploy:prepare 注入：`export const API_BASE: string | undefined = "https://...";`；
+ * 独立仓为空字符串 → api.ts 回退 env（EXPO_PUBLIC_API_BASE）/ 默认 dev 域名。
+ */
+export const API_BASE: string | undefined = "";

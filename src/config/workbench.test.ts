@@ -2,6 +2,16 @@
  * 工作台配置单测：行业 × 角色 → 菜单过滤.
  */
 import { canAccess, getWorkbench, mergeClientTabs, WORKBENCHES } from "./workbench";
+import type { ClientTab } from "./editions/extra";
+
+/** 模拟客户仓注入的 iot tab（总览/设备/告警/产品/规则） */
+const IOT_CLIENT_TABS: ClientTab[] = [
+  { key: "dwjk/overview", title: "总览", icon: "view-dashboard", href: "/dwjk/overview" },
+  { key: "dwjk/devices", title: "设备", icon: "devices", href: "/dwjk/devices" },
+  { key: "dwjk/alarms", title: "告警", icon: "alarm-bell", href: "/dwjk/alarms" },
+  { key: "dwjk/products", title: "产品", icon: "cube-outline", href: "/dwjk/products" },
+  { key: "dwjk/rules", title: "规则", icon: "script-text", href: "/dwjk/rules" },
+];
 
 describe("workbench · 工作台配置", () => {
   it("generic 工作台包含现有功能菜单", () => {
@@ -12,15 +22,17 @@ describe("workbench · 工作台配置", () => {
     );
   });
 
-  it("行业装配点：iot 专属工作台（纯 IoT），edu/legal 回退通用", () => {
+  it("行业装配点：iot 专属工作台（纯 IoT 壳），edu/legal 回退通用", () => {
     expect(WORKBENCHES.iot.industry).toBe("iot");
     expect(WORKBENCHES.iot.home).toBe("/dwjk/overview");
-    // tab 由客户 EXTRA_TABS 注入（merge 后：总览/设备/告警/产品/规则）
+    // 独立仓无客户注入：iot 壳 items 为空（tab 由客户 EXTRA_TABS 注入）
     const titles = getWorkbench("iot").items.map((i) => i.title);
-    expect(titles).toEqual(expect.arrayContaining(["总览", "设备", "告警", "产品", "规则"]));
-    // 纯 IoT：不包含通用 CRM/进销存/记账/审批
-    expect(titles).not.toContain("客户");
-    expect(titles).not.toContain("记账");
+    expect(titles).toEqual([]);
+    // 模拟客户注入（总览/设备/告警/产品/规则）→ 纯 IoT，不含通用 CRM/进销存/记账/审批
+    const injected = getWorkbench("iot", [], IOT_CLIENT_TABS).items.map((i) => i.title);
+    expect(injected).toEqual(["总览", "设备", "告警", "产品", "规则"]);
+    expect(injected).not.toContain("客户");
+    expect(injected).not.toContain("记账");
     for (const id of ["edu", "legal"] as const) {
       expect(WORKBENCHES[id].industry).toBe("generic");
     }
@@ -34,9 +46,9 @@ describe("workbench · 工作台配置", () => {
 
   it("mergeClientTabs：客户注入追加且同 key 去重", () => {
     const base = [{ key: "index", title: "工作台", icon: "view-dashboard", href: "/" }];
-    const merged = mergeClientTabs(base);
+    const merged = mergeClientTabs(base, IOT_CLIENT_TABS);
     const keys = merged.map((i) => i.key);
-    // 客户仓已注入 EXTRA_TABS（总览/设备/告警/产品/规则）→ 追加到菜单尾
+    // 模拟客户注入 EXTRA_TABS（总览/设备/告警/产品/规则）→ 追加到菜单尾
     expect(keys).toContain("dwjk/overview");
     expect(keys.indexOf("dwjk/overview")).toBeGreaterThan(keys.indexOf("index"));
     // base 已含同 key 时跳过（不重复），其余注入 tab 仍追加
@@ -44,7 +56,7 @@ describe("workbench · 工作台配置", () => {
       ...base,
       { key: "dwjk/overview", title: "总览", icon: "view-dashboard", href: "/dwjk/overview" },
     ];
-    const merged2 = mergeClientTabs(base2);
+    const merged2 = mergeClientTabs(base2, IOT_CLIENT_TABS);
     const keys2 = merged2.map((i) => i.key);
     expect(keys2.filter((k) => k === "dwjk/overview")).toHaveLength(1);
     expect(keys2).toContain("dwjk/devices");

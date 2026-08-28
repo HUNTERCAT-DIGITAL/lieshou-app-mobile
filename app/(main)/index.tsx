@@ -32,11 +32,11 @@ interface Metrics {
 
 export default function Workbench() {
   const router = useRouter();
-  // 行业专属工作台：iot → /dwjk/workspace（纯 IoT）；generic/其他保留经营看板
+  // 行业专属工作台：iot → /dwjk/workspace（纯 IoT）；generic/其他保留经营看板。
+  // 注意：重定向判断须在全部 hook 之后返回，否则违反 Rules of Hooks。
   const wb = getWorkbench(getIndustryId());
-  if (wb.home && wb.home !== "/") {
-    return <Redirect href={wb.home as never} />;
-  }
+  const home = wb.home && wb.home !== "/" ? wb.home : null;
+
   const user = useAuthStore((s) => s.user);
   const [loading, setLoading] = useState(false);
   const [metrics, setMetrics] = useState<Metrics>({
@@ -91,8 +91,13 @@ export default function Workbench() {
   };
 
   useEffect(() => {
-    void load();
-  }, []);
+    if (!home) void load();
+  }, [home]);
+
+  // 行业工作台重定向（hook 全部执行完后返回，保持 hook 顺序稳定）
+  if (home) {
+    return <Redirect href={home as never} />;
+  }
 
   return (
     <ScrollView style={styles.scroll} refreshControl={<RefreshControl refreshing={loading} onRefresh={load} />}>

@@ -11,7 +11,7 @@
  * item.roles 缺省 = 全部登录用户可见。
  */
 import type { IndustryId } from "./industry";
-import { EXTRA_TABS } from "./editions/extra";
+import { EXTRA_TABS, type ClientTab } from "./editions/extra";
 
 
 export interface WorkbenchItem {
@@ -66,10 +66,10 @@ export const WORKBENCHES: Record<IndustryId, Workbench> = {
  * 独立仓库 EXTRA_TABS 为空 → 零变化；客户仓 prepare 注入后自动合并。
  * 同 key 已存在时跳过（避免行业工作台自身定义与客户注入重复）。
  */
-export function mergeClientTabs(items: WorkbenchItem[]): WorkbenchItem[] {
+export function mergeClientTabs(items: WorkbenchItem[], extraTabs: ClientTab[] = EXTRA_TABS): WorkbenchItem[] {
   const seen = new Set(items.map((i) => i.key));
   const merged = [...items];
-  for (const t of EXTRA_TABS) {
+  for (const t of extraTabs) {
     if (seen.has(t.key)) continue;
     seen.add(t.key);
     merged.push({
@@ -87,11 +87,15 @@ export function mergeClientTabs(items: WorkbenchItem[]): WorkbenchItem[] {
  * 行业包可注入自定义工作台（替换 WORKBENCHES[id]）；
  * 客户仓注入的 tab 由 mergeClientTabs 合并（2026-09 客户聚合仓模式）。
  */
-export function getWorkbench(industry: IndustryId, roles: string[] = []): Workbench {
+export function getWorkbench(
+  industry: IndustryId,
+  roles: string[] = [],
+  extraTabs: ClientTab[] = EXTRA_TABS,
+): Workbench {
   const wb = WORKBENCHES[industry] ?? GENERIC_WORKBENCH;
   return {
     ...wb,
-    items: mergeClientTabs(wb.items).filter(
+    items: mergeClientTabs(wb.items, extraTabs).filter(
       (it) => !it.roles || it.roles.length === 0 || it.roles.some((r) => roles.includes(r)),
     ),
   };
