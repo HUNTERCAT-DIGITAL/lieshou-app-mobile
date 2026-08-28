@@ -1,39 +1,13 @@
 /**
- * Mobile auth API service（Phase 9 · 多端真实化）.
+ * Mobile auth service —— 登录 / 当前用户（Phase 9 · 多端真实化）.
  *
- * 跟 admin / desktop 共享 @lieshoucloud/contract-api 的 request<T>()。
- * 不同：mobile 是 RN，不能用 window.localStorage —— token 持久化走
- * AsyncStorage（异步），api-client 的 setAccessTokenProvider 用
- * 同步读取函数（getState() 同步返回最新 token，getToken 来自 Zustand store）。
+ * 2026-09 上收 lieshou-core-web（业务逻辑唯一源，同 approval/customer 模式）：
+ * 实现移至 core-web features/auth/auth.api.ts（走注入的 ApiPort 传输），
+ * 本文件保留导出路径兼容既有页面/测试（import '../../services/auth' 不变）。
+ * isApiError/ApiError 来自 contract-api（统一错误类型，去除本地重复实现）。
+ * baseUrl 配置由 app/_layout.tsx 的 ApiPort 统一处理（本文件不再 configureApiBaseUrl）。
  */
-import { request } from "@lieshoucloud/contract-api";
-import type { CurrentUser, LoginRequest, TokenResponse } from "@lieshoucloud/contract-types";
-
-import { configureApiBaseUrl } from "./api";
-
-// 模块加载时配置 baseUrl（原生端指向公网域名，web 端走相对 /api）
-configureApiBaseUrl();
-
-export async function login(req: LoginRequest): Promise<TokenResponse> {
-  return request<TokenResponse>({
-    method: "POST",
-    path: `/api/auth/login`,
-    body: req,
-  });
-}
-
-export async function fetchCurrentUser(): Promise<CurrentUser> {
-  return request<CurrentUser>({
-    method: "GET",
-    path: `/api/auth/me`,
-  });
-}
-
-export interface ApiError extends Error {
-  code?: string;
-  status?: number;
-}
-
-export function isApiError(e: unknown): e is ApiError {
-  return e instanceof Error && "status" in e;
-}
+export { login, refreshTokens, fetchCurrentUser, switchTenant } from "@lieshoucloud/core-web";
+export type { CurrentUser, LoginRequest, TokenResponse } from "@lieshoucloud/contract-types";
+export { isApiError } from "@lieshoucloud/contract-api";
+export type { ApiError } from "@lieshoucloud/contract-api";

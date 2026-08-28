@@ -26,7 +26,7 @@ import {
   type ApprovalRequest,
   type ApprovalType,
 } from "../../../src/services/approval";
-import { listUsers, userDisplayName, type TenantUser } from "../../../src/services/users";
+import { listUsers, userDisplayName, type User } from "../../../src/services/users";
 import { colors } from "../../../src/theme/colors";
 
 type TabKey = "inbox" | "mine";
@@ -144,7 +144,7 @@ function CreateModal({
   const [amount, setAmount] = useState("");
   const [detail, setDetail] = useState("");
   const [approverId, setApproverId] = useState<number | null>(null);
-  const [users, setUsers] = useState<TenantUser[]>([]);
+  const [users, setUsers] = useState<User[]>([]);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
 
