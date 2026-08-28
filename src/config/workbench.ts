@@ -46,13 +46,11 @@ const GENERIC_WORKBENCH: Workbench = {
   ],
 };
 
-/** 物联网工作台（纯 IoT · 电网监控客户；移除通用 CRM/进销存/记账/审批） */
+/** 物联网工作台（纯 IoT · 电网监控客户；tab 由客户仓 EXTRA_TABS 注入：总览/设备/告警/产品/规则） */
 const IOT_WORKBENCH: Workbench = {
   industry: "iot",
-  home: "/dwjk/workspace",
-  items: [
-    { key: "dwjk/workspace", title: "电网监控", icon: "⚡", href: "/dwjk/workspace" },
-  ],
+  home: "/dwjk/overview",
+  items: [],
 };
 
 export const WORKBENCHES: Record<IndustryId, Workbench> = {

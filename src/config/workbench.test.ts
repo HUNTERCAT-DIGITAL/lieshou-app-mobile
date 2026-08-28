@@ -14,9 +14,11 @@ describe("workbench · 工作台配置", () => {
 
   it("行业装配点：iot 专属工作台（纯 IoT），edu/legal 回退通用", () => {
     expect(WORKBENCHES.iot.industry).toBe("iot");
-    expect(WORKBENCHES.iot.items.map((i) => i.title)).toContain("电网监控");
+    expect(WORKBENCHES.iot.home).toBe("/dwjk/overview");
+    // tab 由客户 EXTRA_TABS 注入（merge 后：总览/设备/告警/产品/规则）
+    const titles = getWorkbench("iot").items.map((i) => i.title);
+    expect(titles).toEqual(expect.arrayContaining(["总览", "设备", "告警", "产品", "规则"]));
     // 纯 IoT：不包含通用 CRM/进销存/记账/审批
-    const titles = WORKBENCHES.iot.items.map((i) => i.title);
     expect(titles).not.toContain("客户");
     expect(titles).not.toContain("记账");
     for (const id of ["edu", "legal"] as const) {
@@ -34,15 +36,19 @@ describe("workbench · 工作台配置", () => {
     const base = [{ key: "index", title: "工作台", icon: "📊", href: "/" }];
     const merged = mergeClientTabs(base);
     const keys = merged.map((i) => i.key);
-    // 客户仓已注入 EXTRA_TABS（dwjk/workspace）→ 追加到菜单尾
-    expect(keys).toContain("dwjk/workspace");
-    expect(keys.indexOf("dwjk/workspace")).toBeGreaterThan(keys.indexOf("index"));
-    // base 已含同 key 时跳过（不重复）
+    // 客户仓已注入 EXTRA_TABS（总览/设备/告警/产品/规则）→ 追加到菜单尾
+    expect(keys).toContain("dwjk/overview");
+    expect(keys.indexOf("dwjk/overview")).toBeGreaterThan(keys.indexOf("index"));
+    // base 已含同 key 时跳过（不重复），其余注入 tab 仍追加
     const base2 = [
       ...base,
-      { key: "dwjk/workspace", title: "电网监控", icon: "⚡", href: "/dwjk/workspace" },
+      { key: "dwjk/overview", title: "总览", icon: "📊", href: "/dwjk/overview" },
     ];
-    expect(mergeClientTabs(base2)).toEqual(base2);
+    const merged2 = mergeClientTabs(base2);
+    const keys2 = merged2.map((i) => i.key);
+    expect(keys2.filter((k) => k === "dwjk/overview")).toHaveLength(1);
+    expect(keys2).toContain("dwjk/devices");
+    expect(keys2).toContain("dwjk/rules");
   });
 
   it("mergeClientTabs：客户仓注入 tab 追加到菜单尾", () => {
