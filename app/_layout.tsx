@@ -8,6 +8,7 @@ import { setAccessTokenProvider, setRefreshTokensProvider } from "@lieshoucloud/
 
 import { RootGate } from "../src/components/RootGate";
 import { apiBaseUrl } from "../src/services/api";
+import { AppPaperProvider } from "@lieshoucloud/ui-native/rn";
 
 // —— 会话持久化：AsyncStorage（异步）→ 启动预载同步内存缓存（StoragePort 同步契约）——
 // RN 无 localStorage：此前 storage 端口回落 localStorage 导致会话无法持久化（冷启动丢失登录态）。
@@ -117,19 +118,21 @@ export default function RootLayout() {
   }
 
   return (
-    <RootGate>
-      <Stack
-        screenOptions={{
-          headerStyle: { backgroundColor: "#1677ff" },
-          headerTintColor: "#ffffff",
-          headerTitleStyle: { fontWeight: "600" },
-        }}
-      >
-        <Stack.Screen name="login" options={{ title: "登录", headerShown: false }} />
-        <Stack.Screen name="(main)" options={{ headerShown: false }} />
-      </Stack>
-      <StatusBar style="light" />
-    </RootGate>
+    <AppPaperProvider>
+      <RootGate>
+        <Stack
+          screenOptions={{
+            headerStyle: { backgroundColor: "#1677ff" },
+            headerTintColor: "#ffffff",
+            headerTitleStyle: { fontWeight: "600" },
+          }}
+        >
+          <Stack.Screen name="login" options={{ title: "登录", headerShown: false }} />
+          <Stack.Screen name="(main)" options={{ headerShown: false }} />
+        </Stack>
+        <StatusBar style="light" />
+      </RootGate>
+    </AppPaperProvider>
   );
 }
 
