@@ -1,12 +1,12 @@
 {
   "expo": {
-    "name": "LieShouCloud",
+    "name": "猎手云",
     "slug": "lieshoucloud-mobile",
     "version": "0.0.1",
     "orientation": "portrait",
     "scheme": "lieshoucloud",
     "userInterfaceStyle": "automatic",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/logo.png",
     "splash": {
       "image": "./assets/splash-icon.png",
       "resizeMode": "contain",
@@ -14,15 +14,15 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "cn.huntercat.lieshoucloudpro.mobile",
-      "icon": "./assets/icon.png"
+      "bundleIdentifier": "cn.huntercat.lieshou.mobile",
+      "icon": "./assets/logo.png"
     },
     "android": {
-      "package": "cn.huntercat.lieshoucloudpro.mobile",
+      "package": "cn.huntercat.lieshou.mobile.android",
       "versionCode": 1,
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#1677ff"
+        "foregroundImage": "./assets/logo.png",
+        "backgroundColor": "#ffffff"
       },
       "permissions": [
         "INTERNET",

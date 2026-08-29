@@ -11,12 +11,6 @@
     "paths": {
       "@/*": [
         "./src/*"
-      ],
-      "@lieshoucloud/contract-api": [
-        "./open/contract-api/src"
-      ],
-      "@lieshoucloud/contract-types": [
-        "./open/contract-types/src"
       ]
     }
   },
@@ -29,8 +23,6 @@
   ],
   "exclude": [
     "node_modules",
-    "open/*/src/**/*.test.*",
-    "industry",
     "open",
     "open/**"
   ]

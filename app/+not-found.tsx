@@ -1,44 +1,15 @@
-import { Link, Stack } from "expo-router";
-import { StyleSheet, Text, View } from "react-native";
-import { colors } from "../src/theme/colors";
+/** 404 兜底（端自身骨架） */
+import { StyleSheet, Text, View } from 'react-native';
 
-export default function NotFoundScreen() {
+export default function NotFound() {
   return (
-    <>
-      <Stack.Screen options={{ title: "Oops!" }} />
-      <View style={styles.container}>
-        <Text style={styles.code}>404</Text>
-        <Text style={styles.message}>这页不存在</Text>
-        <Link href="/" style={styles.link}>
-          回到首页
-        </Link>
-      </View>
-    </>
+    <View style={styles.container}>
+      <Text style={styles.title}>页面不存在</Text>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-    padding: 20,
-    backgroundColor: colors.bg,
-  },
-  code: {
-    fontSize: 64,
-    fontWeight: "700",
-    color: colors.primary,
-  },
-  message: {
-    fontSize: 16,
-    color: colors.textSecondary,
-    marginTop: 8,
-  },
-  link: {
-    marginTop: 24,
-    color: colors.primary,
-    fontSize: 16,
-    fontWeight: "600",
-  },
+  container: { flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: '#f5f6f7' },
+  title: { fontSize: 16, color: '#8c8c8c' },
 });

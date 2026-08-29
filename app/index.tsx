@@ -1,96 +1,167 @@
 /**
- * 品牌入口页（薄客户端入口 · 单页）.
- *
- * 2026-09 精简：端壳收敛为单一品牌入口，不再承载登录与业务工作台；
- * 展示 "LieShou 猎手猫快速开发框架" 品牌信息，客户版别可经 BRAND 注入覆盖。
+ * 启动页（端自身骨架）· 品牌 + 平台标识 + 版本 + 登录用户 + 后端连通性检查。
+ * 未登录 → 回登录页；后续业务页面从零装配，本页是端能力验证锚点。
  */
-import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { StatusBar } from "expo-status-bar";
-import { ScrollView, StyleSheet, Text, View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { useCallback, useEffect, useState } from 'react';
+import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { type Href, useRouter } from 'expo-router';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { BRAND } from "../src/config/editions/extra";
-import { colors } from "../src/theme/colors";
+import { getEdition } from '../src/config/editions';
+import { APP_VERSION } from '../src/config/version';
+import { fetchMe, getUser, isLoggedIn, logout, type SessionUser } from '../src/lib/auth';
 
-export default function BrandEntryScreen() {
-  const brandName = BRAND?.name ?? "LieShou 猎手猫快速开发框架";
-  const slogan = BRAND?.subtitle ?? "快速开发框架 · 一云多端 · 契约驱动";
+interface CheckState {
+  ok: boolean;
+  text: string;
+}
+
+export default function HomePage() {
+  const router = useRouter();
+  const edition = getEdition();
+  const [user, setUser] = useState<SessionUser | null>(null);
+  const [checking, setChecking] = useState(false);
+  const [checkMsg, setCheckMsg] = useState<CheckState | null>(null);
+  const [ready, setReady] = useState(false);
+  const userName = user?.displayName || user?.username || '未登录';
+  const userText = user?.tenantName ? `${userName}（${user.tenantName}）` : userName;
+
+  useEffect(() => {
+    let cancelled = false;
+    void (async () => {
+      const logged = await isLoggedIn();
+      if (!logged) {
+        router.replace('/login' as Href);
+        return;
+      }
+      if (cancelled) return;
+      setReady(true);
+      setUser(await getUser());
+      fetchMe()
+        .then((me) => !cancelled && setUser(me))
+        .catch(() => {
+          /* 静默：守卫已兜底 */
+        });
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [router]);
+
+  const runCheck = useCallback(async () => {
+    setChecking(true);
+    setCheckMsg(null);
+    try {
+      const me = await fetchMe();
+      setUser(me);
+      setCheckMsg({
+        ok: true,
+        text: `后端连通正常（${me.username ?? '已登录'} @ ${me.tenantCode ?? '-'}）`,
+      });
+    } catch (err) {
+      setCheckMsg({ ok: false, text: err instanceof Error ? err.message : String(err) });
+    } finally {
+      setChecking(false);
+    }
+  }, []);
+
+  async function handleLogout(): Promise<void> {
+    await logout();
+    router.replace('/login' as Href);
+  }
+
+  if (!ready) {
+    return (
+      <SafeAreaView style={styles.safe}>
+        <ActivityIndicator size="large" color="#02429b" />
+      </SafeAreaView>
+    );
+  }
 
   return (
     <SafeAreaView style={styles.safe}>
-      <StatusBar style="light" />
       <ScrollView contentContainerStyle={styles.container}>
-        {/* 品牌区 */}
-        <View style={styles.brand}>
-          <View style={styles.logoWrap}>
-            <MaterialCommunityIcons name="cat" size={56} color="#fff" />
-          </View>
-          <Text style={styles.name}>{brandName}</Text>
-          <Text style={styles.slogan}>{slogan}</Text>
+        <View style={styles.hero}>
+          <Text style={styles.title}>{edition.brandName}</Text>
+          <Text style={styles.slogan}>{edition.slogan}</Text>
         </View>
-
-        {/* 特性简介 */}
-        <View style={styles.cards}>
-          <FeatureCard icon="layers-triple" title="契约驱动" desc="contract-api / contract-types 统一契约，多端同源" />
-          <FeatureCard icon="cellphone-link" title="一云多端" desc="Web / 桌面 / 移动 / 小程序一套业务逻辑" />
-          <FeatureCard icon="puzzle" title="装配式" desc="客户能力经 Edition 注入，零仓库零分叉" />
+        <View style={styles.card}>
+          <Row label="平台" value="移动端 · Expo + React Native" />
+          <Row label="版本" value={APP_VERSION} />
+          <Row label="版别" value={edition.id} />
+          <Row label="用户" value={userText} />
         </View>
-
-        <Text style={styles.footer}>© HUNTERCAT-DIGITAL</Text>
+        <Pressable
+          style={({ pressed }) => [styles.primary, pressed && styles.pressed]}
+          onPress={() => void runCheck()}
+          disabled={checking}
+        >
+          {checking ? (
+            <ActivityIndicator color="#fff" />
+          ) : (
+            <Text style={styles.primaryText}>检查后端连通性</Text>
+          )}
+        </Pressable>
+        {checkMsg && (
+          <Text style={checkMsg.ok ? styles.ok : styles.fail}>{checkMsg.text}</Text>
+        )}
+        <Pressable
+          style={({ pressed }) => [styles.ghost, pressed && styles.pressed]}
+          onPress={() => void handleLogout()}
+        >
+          <Text style={styles.ghostText}>退出登录</Text>
+        </Pressable>
       </ScrollView>
     </SafeAreaView>
   );
 }
 
-function FeatureCard({ icon, title, desc }: { icon: string; title: string; desc: string }) {
+function Row({ label, value }: { label: string; value: string }) {
   return (
-    <View style={styles.card}>
-      <MaterialCommunityIcons
-        name={icon as React.ComponentProps<typeof MaterialCommunityIcons>["name"]}
-        size={24}
-        color={colors.primary}
-      />
-      <View style={styles.cardBody}>
-        <Text style={styles.cardTitle}>{title}</Text>
-        <Text style={styles.cardDesc}>{desc}</Text>
-      </View>
+    <View style={styles.row}>
+      <Text style={styles.key}>{label}</Text>
+      <Text style={styles.value}>{value}</Text>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: colors.bg },
-  container: { flexGrow: 1, padding: 24, justifyContent: "center" },
-  brand: { alignItems: "center", marginBottom: 40 },
-  logoWrap: {
-    width: 96,
-    height: 96,
-    borderRadius: 24,
-    backgroundColor: colors.primary,
-    alignItems: "center",
-    justifyContent: "center",
-    marginBottom: 20,
+  safe: { flex: 1, backgroundColor: '#f5f6f7' },
+  container: { flexGrow: 1, padding: 24 },
+  hero: { alignItems: 'center', paddingVertical: 32 },
+  title: { fontSize: 24, fontWeight: '700', color: '#1f1f1f' },
+  slogan: { fontSize: 14, color: '#8c8c8c', marginTop: 8 },
+  card: { backgroundColor: '#fff', borderRadius: 12, paddingHorizontal: 16, marginBottom: 16 },
+  row: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingVertical: 14,
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    borderBottomColor: '#f0f0f0',
   },
-  name: { fontSize: 24, fontWeight: "700", color: colors.text, textAlign: "center" },
-  slogan: { fontSize: 14, color: colors.textSecondary, marginTop: 8, textAlign: "center" },
-  cards: { gap: 12 },
-  card: {
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: colors.card,
-    borderRadius: 10,
-    padding: 16,
-    borderWidth: StyleSheet.hairlineWidth,
-    borderColor: colors.divider,
-    gap: 14,
+  key: { fontSize: 14, color: '#8c8c8c' },
+  value: { fontSize: 14, color: '#1f1f1f', flexShrink: 1, textAlign: 'right' },
+  primary: {
+    height: 46,
+    borderRadius: 8,
+    backgroundColor: '#02429b',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 12,
   },
-  cardBody: { flex: 1 },
-  cardTitle: { fontSize: 15, fontWeight: "600", color: colors.text },
-  cardDesc: { fontSize: 12, color: colors.textSecondary, marginTop: 4, lineHeight: 18 },
-  footer: {
-    textAlign: "center",
-    fontSize: 12,
-    color: colors.textSecondary,
-    marginTop: 40,
+  primaryText: { color: '#fff', fontSize: 15, fontWeight: '600' },
+  ghost: {
+    height: 46,
+    borderRadius: 8,
+    backgroundColor: '#fff',
+    borderWidth: 1,
+    borderColor: '#d9d9d9',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
+  ghostText: { color: '#595959', fontSize: 15 },
+  pressed: { opacity: 0.8 },
+  ok: { color: '#389e0d', fontSize: 13, textAlign: 'center', marginBottom: 12 },
+  fail: { color: '#cf1322', fontSize: 13, textAlign: 'center', marginBottom: 12 },
 });
