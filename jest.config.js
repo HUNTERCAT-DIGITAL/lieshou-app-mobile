@@ -15,6 +15,7 @@ module.exports = {
   moduleNameMapper: {
     "^@lieshoucloud/contract-api$": "<rootDir>/open/contract-api/src",
     "^@lieshoucloud/contract-types$": "<rootDir>/open/contract-types/src",
+    "^@lieshoucloud/contract-types/(.*)$": "<rootDir>/open/contract-types/src/$1",
     "^@lieshoucloud/core-web$": "<rootDir>/open/core-web/src",
   },
   // 排除 open/ submodule（开源 packages 的测试由各自仓库/包自行跑，端仓库 jest 不扫）

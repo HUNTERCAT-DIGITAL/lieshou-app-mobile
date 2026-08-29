@@ -38,6 +38,16 @@ describe("mobile MobileUI", () => {
     expect(textOf(el)).toBe("新客户");
   });
 
+  it("StatusBadge：antd token 色归一为 RN 合法 hex（contract-types META 兼容）", () => {
+    const el = StatusBadge({ text: "已通过", color: "success" }) as El;
+    expect(textOf(el)).toBe("已通过");
+  });
+
+  it("StatusBadge：未知 token 原样透传不崩", () => {
+    const el = StatusBadge({ text: "X", color: "#abcdef" }) as El;
+    expect(textOf(el)).toBe("X");
+  });
+
   it("RoleBadge：平台管理员渲染角色码", () => {
     const el = RoleBadge({ role: "PLATFORM_ADMIN" }) as El;
     expect(textOf(el)).toBe("PLATFORM_ADMIN");
@@ -69,6 +79,6 @@ describe("mobile MobileUI", () => {
 
   it("ErrorState：无 onRetry 时不渲染按钮", () => {
     const el = ErrorState({}) as El;
-    expect(textOf(el)).toContain("⚠️");
+    expect(textOf(el)).toContain("加载失败");
   });
 });

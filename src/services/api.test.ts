@@ -2,8 +2,14 @@
  * Mobile api 服务单测（baseUrl 配置 + gateway 健康检查降级）.
  */
 import * as apiClient from "@lieshoucloud/contract-api";
+import { Platform } from "react-native";
 
-import { configureApiBaseUrl, fetchGatewayHealth, MOBILE_API_BASE } from "./api";
+import {
+  apiBaseUrl,
+  configureApiBaseUrl,
+  fetchGatewayHealth,
+  MOBILE_API_BASE,
+} from "./api";
 
 describe("mobile api", () => {
   const originalFetch = global.fetch;
@@ -32,7 +38,17 @@ describe("mobile api", () => {
     expect(setBaseUrl).toHaveBeenCalledWith(MOBILE_API_BASE);
   });
 
-  it("MOBILE_API_BASE 为公网域名", () => {
-    expect(MOBILE_API_BASE).toBe("https://expo.lieshoucloud.huntercat.cn");
+  it("MOBILE_API_BASE 为公网域名（注入优先，缺省 dev 域名）", () => {
+    expect(MOBILE_API_BASE).toMatch(/^https?:\/\//);
+  });
+
+  it("apiBaseUrl web 端同源相对路径（nginx 反代 /api，避免跨域）", () => {
+    jest.replaceProperty(Platform, "OS", "web");
+    expect(apiBaseUrl()).toBe("");
+  });
+
+  it("apiBaseUrl native 端公网域名", () => {
+    jest.replaceProperty(Platform, "OS", "ios");
+    expect(apiBaseUrl()).toBe(MOBILE_API_BASE);
   });
 });

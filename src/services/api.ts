@@ -18,8 +18,20 @@ import type { HealthStatus } from "@lieshoucloud/contract-types";
  *  - 正式打包：构建时注入生产域名（EAS environment variable），默认值仅作 dev 兜底
  */
 import { resolveApiBase } from '@lieshoucloud/contract-config';
+import { API_BASE } from '../config/editions/extra';
 
-export const MOBILE_API_BASE = resolveApiBase({ defaultBase: 'https://expo.lieshoucloud.huntercat.cn', tool: 'expo' });
+// 客户注入配置优先（dwjk 等客户仓 prepare 注入）；否则 env / 默认 dev 域名
+export const MOBILE_API_BASE =
+  API_BASE || resolveApiBase({ defaultBase: 'https://expo.lieshoucloud.huntercat.cn', tool: 'expo' });
+
+/**
+ * 当前平台 API 基址：
+ *  - web（react-native-web）：同源相对路径（nginx/vite 反代 /api → gateway），避免跨域 CORS 拦截
+ *  - native（Expo Go 真机/模拟器）：公网域名（MOBILE_API_BASE，nginx /api → gateway）
+ */
+export function apiBaseUrl(): string {
+  return Platform.OS === "web" ? "" : MOBILE_API_BASE;
+}
 
 /**
  * 配置 api-client baseUrl：
@@ -38,7 +50,7 @@ export function configureApiBaseUrl(): void {
  */
 export async function fetchGatewayHealth(): Promise<HealthStatus> {
   try {
-    const base = Platform.OS === "web" ? "" : MOBILE_API_BASE;
+    const base = apiBaseUrl();
     const res = await fetch(`${base}/actuator/health`);
     const data = (await res.json()) as { status: HealthStatus };
     return data.status;

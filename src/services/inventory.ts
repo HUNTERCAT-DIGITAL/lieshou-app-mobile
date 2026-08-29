@@ -1,56 +1,31 @@
 /**
- * Mobile inventory service（Phase 9 · 多端接入）.
+ * Mobile inventory service —— 进销存（商品 / 出入库 / 库存预警）.
+ *
+ * 2026-09 上收 lieshou-core-web（业务逻辑唯一源，同 approval/customer/lead 模式）：
+ * 实现移至 core-web features/inventory/inventory.api.ts + inventory.ts（纯函数），
+ * 本文件保留导出路径兼容既有页面/测试（import '../../services/inventory' 不变）。
+ * 命名对齐 core-web：stockIn/stockOut 收 body（StockChangeRequest）；
+ * 库存预警判定 stockLevel(qty, lowThreshold) 业务规则来自 core-web 纯函数。
  */
-import { request } from "@lieshoucloud/contract-api";
-
-export type StockMovementType = "IN" | "OUT";
-
-export interface Product {
-  id: number;
-  tenantId: number;
-  name: string;
-  code?: string | null;
-  unit?: string | null;
-  price?: number | null;
-  stockQuantity: number;
-  remark?: string | null;
-  createdAt: string;
-}
-
-export interface StockMovement {
-  id: number;
-  productId: number;
-  type: StockMovementType;
-  quantity: number;
-  remark?: string | null;
-  createdAt: string;
-}
-
-export async function listProducts(keyword?: string): Promise<Product[]> {
-  const query: Record<string, string> = {};
-  if (keyword) query.keyword = keyword;
-  return request<Product[]>({ method: "GET", path: `/products`, query });
-}
-
-export async function createProduct(body: {
-  name: string;
-  code?: string;
-  unit?: string;
-  price?: number;
-  remark?: string;
-}): Promise<Product> {
-  return request<Product>({ method: "POST", path: `/products`, body });
-}
-
-export async function stockIn(id: number, quantity: number, remark?: string): Promise<Product> {
-  return request<Product>({ method: "POST", path: `/products/${id}/stock-in`, body: { quantity, remark } });
-}
-
-export async function stockOut(id: number, quantity: number, remark?: string): Promise<Product> {
-  return request<Product>({ method: "POST", path: `/products/${id}/stock-out`, body: { quantity, remark } });
-}
-
-export const MOVEMENT_META: Record<StockMovementType, { text: string; color: string }> = {
-  IN: { text: "入库", color: "#52c41a" },
-  OUT: { text: "出库", color: "#fa8c16" },
-};
+export {
+  listProducts,
+  countProducts,
+  getProduct,
+  createProduct,
+  updateProduct,
+  deleteProduct,
+  stockIn,
+  stockOut,
+  listMovements,
+} from "@lieshoucloud/core-web";
+export type {
+  CreateProductRequest,
+  Product,
+  StockChangeRequest,
+  StockMovement,
+  StockMovementType,
+  UpdateProductRequest,
+} from "@lieshoucloud/contract-types";
+export { MOVEMENT_META } from "@lieshoucloud/contract-types";
+export { LOW_STOCK_THRESHOLD, stockLevel } from "@lieshoucloud/core-web";
+export type { StockLevel } from "@lieshoucloud/core-web";

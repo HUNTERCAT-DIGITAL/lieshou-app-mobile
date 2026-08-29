@@ -5,8 +5,8 @@
   "main": "expo-router/entry",
   "scripts": {
     "start": "expo start",
-    "android": "expo start --android",
-    "ios": "expo start --ios",
+    "android": "expo run:android",
+    "ios": "expo run:ios",
     "web": "expo start --web",
     "build": "expo export --platform all",
     "typecheck": "tsc --noEmit",
@@ -19,8 +19,12 @@
   "dependencies": {
     "@babel/runtime": "^7.25.0",
     "@expo/metro-runtime": "~57.0.12",
+    "@expo/vector-icons": "^15.0.2",
     "@lieshoucloud/contract-api": "workspace:*",
     "@lieshoucloud/contract-types": "workspace:*",
+    "@lieshoucloud/core-web": "workspace:*",
+    "@lieshoucloud/hooks": "workspace:*",
+    "@lieshoucloud/ui-native": "workspace:*",
     "@react-native-async-storage/async-storage": "2.2.0",
     "abort-controller": "^3.0.0",
     "base64-js": "^1.5.1",
@@ -36,6 +40,7 @@
     "react-dom": "19.2.3",
     "react-native": "0.86.2",
     "react-native-gesture-handler": "~2.32.0",
+    "react-native-paper": "5.15.3",
     "react-native-reanimated": "~4.5.1",
     "react-native-safe-area-context": "5.7.0",
     "react-native-screens": "~4.26.2",
@@ -44,8 +49,7 @@
     "react-router-dom": "^7.18.2",
     "regenerator-runtime": "^0.13.2",
     "whatwg-fetch": "^3.0.0",
-    "zustand": "5.0.2",
-    "@lieshoucloud/core-web": "workspace:*"
+    "zustand": "5.0.2"
   },
   "devDependencies": {
     "@babel/core": "^7.25.0",
@@ -73,5 +77,14 @@
       ]
     }
   },
-  "packageManager": "pnpm@9.12.0"
+  "packageManager": "pnpm@9.12.0",
+  "pnpm": {
+    "overrides": {
+      "react": "19.2.3",
+      "react-dom": "19.2.3",
+      "react@19.0.0": "19.2.3",
+      "react-dom@19.0.0": "19.2.3",
+      "@types/react": "19.0.0"
+    }
+  }
 }

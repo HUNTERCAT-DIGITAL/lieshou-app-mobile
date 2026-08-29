@@ -1,3 +1,8 @@
 packages:
-  - "open/*"
+  - "open/contract-api"
+  - "open/contract-config"
+  - "open/contract-types"
+  - "open/core-web"
+  - "open/hooks"
+  - "open/ui-native"
   - "industry/packages/*"
