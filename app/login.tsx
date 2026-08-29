@@ -51,7 +51,7 @@ export default function LoginScreen() {
       <KeyboardAvoidingView style={styles.flex} behavior={Platform.OS === "ios" ? "padding" : undefined}>
         <View style={styles.brandRow}>
           <View style={styles.dot} />
-          <Text style={styles.brandText}>LieShou Cloud</Text>
+          <Text style={styles.brandText}>海赞</Text>
         </View>
         <Text style={styles.title}>登录 · Mobile</Text>
         <Text style={styles.subtitle}>与 Admin / Desktop 共享后端；登录态走 Zustand + AsyncStorage</Text>

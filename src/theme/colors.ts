@@ -4,8 +4,8 @@
  * mobile 用 hex 近似 antd 的 rgba 文本色（RN 无 antd，值以 UI.md 为准）.
  */
 export const colors = {
-  /** colorPrimary · 品牌主色 */
-  primary: "#1677ff",
+  /** colorPrimary · 品牌主色（海赞数智蓝） */
+  primary: "#103070",
   /** colorBgLayout · 页面背景 */
   bg: "#f5f5f5",
   /** colorBgContainer · 卡片/容器背景 */
