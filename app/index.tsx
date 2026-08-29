@@ -1,15 +1,15 @@
 /**
- * 启动页（端自身骨架）· 品牌 + 平台标识 + 版本 + 登录用户 + 后端连通性检查。
- * 未登录 → 回登录页；后续业务页面从零装配，本页是端能力验证锚点。
+ * 启动页（端自身骨架 · 用户/登录态来自 core-web useAuthStore）
+ * 品牌 + 平台标识 + 版本 + 登录用户 + 后端连通性检查（GET /api/auth/me）。
  */
 import { useCallback, useEffect, useState } from 'react';
 import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { type Href, useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useAuthStore } from '@lieshoucloud/core-web';
 
 import { getEdition } from '../src/config/editions';
 import { APP_VERSION } from '../src/config/version';
-import { fetchMe, getUser, isLoggedIn, logout, type SessionUser } from '../src/lib/auth';
 
 interface CheckState {
   ok: boolean;
@@ -19,41 +19,34 @@ interface CheckState {
 export default function HomePage() {
   const router = useRouter();
   const edition = getEdition();
-  const [user, setUser] = useState<SessionUser | null>(null);
+  const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
+  const user = useAuthStore((s) => s.user);
+  const fetchMe = useAuthStore((s) => s.fetchMe);
+  const logout = useAuthStore((s) => s.logout);
   const [checking, setChecking] = useState(false);
   const [checkMsg, setCheckMsg] = useState<CheckState | null>(null);
   const [ready, setReady] = useState(false);
-  const userName = user?.displayName || user?.username || '未登录';
+  const userName = user?.username || '未登录';
   const userText = user?.tenantName ? `${userName}（${user.tenantName}）` : userName;
 
   useEffect(() => {
-    let cancelled = false;
-    void (async () => {
-      const logged = await isLoggedIn();
-      if (!logged) {
-        router.replace('/login' as Href);
-        return;
-      }
-      if (cancelled) return;
-      setReady(true);
-      setUser(await getUser());
-      fetchMe()
-        .then((me) => !cancelled && setUser(me))
-        .catch(() => {
-          /* 静默：守卫已兜底 */
-        });
-    })();
-    return () => {
-      cancelled = true;
-    };
-  }, [router]);
+    const required = edition.login?.required !== false;
+    if (required && !isAuthenticated) {
+      router.replace('/login' as Href);
+      return;
+    }
+    setReady(true);
+    fetchMe()
+      .catch(() => {
+        /* 静默：守卫已兜底 */
+      });
+  }, [router, edition.login?.required, isAuthenticated, fetchMe]);
 
   const runCheck = useCallback(async () => {
     setChecking(true);
     setCheckMsg(null);
     try {
       const me = await fetchMe();
-      setUser(me);
       setCheckMsg({
         ok: true,
         text: `后端连通正常（${me.username ?? '已登录'} @ ${me.tenantCode ?? '-'}）`,
@@ -63,7 +56,7 @@ export default function HomePage() {
     } finally {
       setChecking(false);
     }
-  }, []);
+  }, [fetchMe]);
 
   async function handleLogout(): Promise<void> {
     await logout();

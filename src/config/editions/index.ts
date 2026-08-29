@@ -1,9 +1,10 @@
 /**
- * 版别解析（端自身骨架）：
- * 构建期 `EXPO_PUBLIC_EDITION` 注入（如 EXPO_PUBLIC_EDITION=legalmind pnpm start）→ generic 兜底。
+ * 版别解析（端自身骨架 · 类型来自共享契约 contract-types）：
+ * 构建期 `EXPO_PUBLIC_EDITION` 注入 → generic 兜底。
  */
+import type { EditionConfig } from '@lieshoucloud/contract-types';
+
 import { genericEdition } from './generic';
-import type { EditionConfig } from './types';
 
 export function resolveEditionId(): string {
   const env = process.env.EXPO_PUBLIC_EDITION as string | undefined;

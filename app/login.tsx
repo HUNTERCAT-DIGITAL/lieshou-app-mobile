@@ -1,18 +1,20 @@
 /**
- * 登录页（端自身骨架）· 租户 + 账号 + 密码 → lib/auth.login（POST /api/auth/login）。
- * 已登录 / login.required=false（游客直达）→ 直接进启动页。
+ * 登录页（端自身骨架 · 登录态来自 core-web useAuthStore）
+ * 租户 + 账号 + 密码 → core-web login（POST /api/auth/login）。
  */
 import { useEffect, useState } from 'react';
 import { ActivityIndicator, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useAuthStore } from '@lieshoucloud/core-web';
 
 import { getEdition } from '../src/config/editions';
-import { isLoggedIn, login } from '../src/lib/auth';
 
 export default function LoginPage() {
   const router = useRouter();
   const edition = getEdition();
+  const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
+  const login = useAuthStore((s) => s.login);
   const [tenantCode, setTenantCode] = useState(edition.tenantCode ?? 'default');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -20,16 +22,10 @@ export default function LoginPage() {
   const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
-    let cancelled = false;
-    void (async () => {
-      if (edition.login?.required === false || (await isLoggedIn())) {
-        if (!cancelled) router.replace('/');
-      }
-    })();
-    return () => {
-      cancelled = true;
-    };
-  }, [router, edition.login?.required]);
+    if (edition.login?.required === false || isAuthenticated) {
+      router.replace('/');
+    }
+  }, [router, edition.login?.required, isAuthenticated]);
 
   async function handleLogin(): Promise<void> {
     if (!username.trim() || !password) {

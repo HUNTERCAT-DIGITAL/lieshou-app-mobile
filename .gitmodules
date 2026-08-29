@@ -19,3 +19,6 @@
 [submodule "open/hooks"]
 	path = open/hooks
 	url = git@github.com:HUNTERCAT-DIGITAL/lieshou-hooks.git
+[submodule "open/i18n"]
+	path = open/i18n
+	url = git@github.com:HUNTERCAT-DIGITAL/lieshou-i18n.git
