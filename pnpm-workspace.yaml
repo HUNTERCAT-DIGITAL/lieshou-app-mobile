@@ -1,8 +1,3 @@
+# 端自身骨架：共享仓 open/*（2026-08 统一挂载矩阵）
 packages:
-  - "open/contract-api"
-  - "open/contract-config"
-  - "open/contract-types"
-  - "open/core-web"
-  - "open/hooks"
-  - "open/ui-native"
-  - "industry/packages/*"
+  - "open/*"

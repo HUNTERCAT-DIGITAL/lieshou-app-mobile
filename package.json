@@ -40,7 +40,8 @@
     "@lieshoucloud/contract-config": "workspace:*",
     "@lieshoucloud/contract-types": "workspace:*",
     "@lieshoucloud/core-web": "workspace:*",
-    "@lieshoucloud/i18n": "workspace:*"
+    "@lieshoucloud/i18n": "workspace:*",
+    "react-native-paper": "5.15.3"
   },
   "devDependencies": {
     "@babel/core": "^7.25.0",

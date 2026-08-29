@@ -29,6 +29,12 @@
       ],
       "@lieshoucloud/i18n": [
         "./open/i18n/src"
+      ],
+      "@lieshoucloud/ui-native": [
+        "./open/ui-native/src"
+      ],
+      "@lieshoucloud/ui-native/*": [
+        "./open/ui-native/src/*"
       ]
     }
   },
