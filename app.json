@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "猎手云",
+    "name": "物联网云平台",
     "slug": "lieshoucloud-mobile",
     "version": "0.0.1",
     "orientation": "portrait",
@@ -20,6 +20,7 @@
     "android": {
       "package": "cn.huntercat.lieshou.mobile.android",
       "versionCode": 1,
+      "softwareKeyboardLayoutMode": "resize",
       "adaptiveIcon": {
         "foregroundImage": "./assets/logo.png",
         "backgroundColor": "#ffffff"
