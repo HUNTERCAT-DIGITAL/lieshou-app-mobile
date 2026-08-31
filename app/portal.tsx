@@ -3,7 +3,13 @@
  * 品牌 + 平台简介 → 「登 录」→ 登录页。用户旅程：欢迎 → 门户 → 登录 → 内容 → 登出 → 登录。
  */
 import { useRouter } from 'expo-router';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import {
+  Image,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTheme } from '@lieshoucloud/ui-native/rn';
@@ -19,7 +25,7 @@ export default function PortalPage() {
     <SafeAreaView style={[styles.safe, { backgroundColor: theme.colors.background }]}>
       <View style={styles.hero}>
         <View style={[styles.icon, { backgroundColor: `${theme.colors.primary}18` }]}>
-          <MaterialCommunityIcons name="shield-search" size={44} color={theme.colors.primary} />
+          <Image source={require('../assets/logo-grid.png')} style={styles.icon} resizeMode="contain" />
         </View>
         <Text style={[styles.title, { color: theme.colors.onSurface }]}>{edition.brandName}</Text>
         {edition.slogan && (

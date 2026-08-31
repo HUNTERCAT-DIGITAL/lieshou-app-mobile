@@ -3,8 +3,13 @@
  * 品牌闪屏：品牌图标 + 平台名 + 标语 → 「进入应用」→ 门户页（未登录）或已登录守卫已跳业务首页。
  */
 import { useRouter } from 'expo-router';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import {
+  Image,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTheme } from '@lieshoucloud/ui-native/rn';
 
@@ -19,7 +24,7 @@ export default function WelcomePage() {
     <SafeAreaView style={[styles.safe, { backgroundColor: theme.colors.primary }]}>
       <View style={styles.brand}>
         <View style={[styles.icon, { backgroundColor: `${theme.colors.onPrimary}22` }]}>
-          <MaterialCommunityIcons name="shield-search" size={48} color={theme.colors.onPrimary} />
+          <Image source={require('../assets/logo-grid.png')} style={styles.icon} resizeMode="contain" />
         </View>
         <Text style={styles.title}>{edition.brandName}</Text>
         {edition.slogan && <Text style={styles.slogan}>{edition.slogan}</Text>}
