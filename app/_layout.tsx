@@ -14,7 +14,6 @@ import { useEffect } from 'react';
 import { Alert } from 'react-native';
 import { type Href, router } from 'expo-router';
 import { AppPaperProvider } from '@lieshoucloud/ui-native/rn';
-import { initIotApi } from '@lieshoucloud/dwjk/industry';
 
 import { PRIMARY_COLOR } from '../src/config/editions/extra';
 
@@ -57,9 +56,18 @@ const api = createApiClient({
   },
 });
 
-// —— IoT 行业包传输层注入（industry/api.ts 统一走 contract-api 实例：token 注入 + 401 单飞刷新）——
-// 2026-09：mobile 客户包从旧 packages/dwjk/src/api.ts（模块级 request）统一到 industry 传输层
-initIotApi(api);
+// —— IoT 行业包传输层注入（仅客户仓场景：@lieshoucloud/<client>/industry 存在时注入）——
+// 2026-09 b361024 曾写死 import '@lieshoucloud/dwjk/industry'，违反客户能力注入架构且 generic 编译失败；
+// 改为非字面量 require（Metro 不解析变量路径 → generic/无客户包仓运行时 catch 跳过，客户仓正常注入）。
+try {
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  const industryMod = require('@lieshoucloud/dwjk/industry') as {
+    initIotApi?: (api: unknown) => void;
+  };
+  industryMod?.initIotApi?.(api);
+} catch {
+  // generic 独立仓 / 非 dwjk 客户仓：无该包 → 跳过（IoT 为客户能力）
+}
 
 // core-web storage 端口是同步签名；RN AsyncStorage 异步 → 同步内存缓存 + 异步持久化
 const mem = new Map<string, string>();
