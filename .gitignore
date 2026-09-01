@@ -36,3 +36,9 @@ coverage/
 
 # LieShouBoot prepare.mjs 生成的薄壳页（勿提交）
 app/(main)/boot/
+# 客户仓 deploy:prepare 生成的客户薄壳页（勿提交；generic 无此目录）
+app/(main)/legalmind/
+
+# 客户仓 deploy:prepare 生成的版别 tsconfig（tsconfig.legalmind.json · 勿提交；tsconfig.json 为端自身文件）
+tsconfig.*.json
+!tsconfig.json
