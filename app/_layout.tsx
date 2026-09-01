@@ -14,6 +14,7 @@ import { useEffect } from 'react';
 import { Alert } from 'react-native';
 import { type Href, router } from 'expo-router';
 import { AppPaperProvider } from '@lieshoucloud/ui-native/rn';
+import { initIotApi } from '@lieshoucloud/dwjk/industry';
 
 import { PRIMARY_COLOR } from '../src/config/editions/extra';
 
@@ -55,6 +56,10 @@ const api = createApiClient({
     },
   },
 });
+
+// —— IoT 行业包传输层注入（industry/api.ts 统一走 contract-api 实例：token 注入 + 401 单飞刷新）——
+// 2026-09：mobile 客户包从旧 packages/dwjk/src/api.ts（模块级 request）统一到 industry 传输层
+initIotApi(api);
 
 // core-web storage 端口是同步签名；RN AsyncStorage 异步 → 同步内存缓存 + 异步持久化
 const mem = new Map<string, string>();
