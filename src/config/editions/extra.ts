@@ -24,5 +24,8 @@ export const BRAND: BrandConfig = {
 /** API 基址（generic 走 env / _layout 默认） */
 export const API_BASE: string | undefined = undefined;
 
+/** 客户默认租户（客户仓 prepare 注入；generic 走 genericEdition 缺省） */
+export const TENANT_CODE: string | undefined = undefined;
+
 /** 品牌主色（generic 猎手云主色） */
 export const PRIMARY_COLOR: string = "#1677ff";

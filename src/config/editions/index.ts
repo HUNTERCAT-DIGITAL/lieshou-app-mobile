@@ -6,7 +6,7 @@
 import type { EditionConfig } from '@lieshoucloud/contract-types';
 
 import { genericEdition } from './generic';
-import { BRAND } from './extra';
+import { BRAND, TENANT_CODE } from './extra';
 
 export function resolveEditionId(): string {
   const env = process.env.EXPO_PUBLIC_EDITION as string | undefined;
@@ -25,5 +25,6 @@ export function getEdition(): EditionConfig {
     brandName: BRAND.name || genericEdition.brandName,
     companyName: BRAND.title || genericEdition.brandName,
     slogan: BRAND.subtitle || genericEdition.slogan,
+    tenantCode: TENANT_CODE || genericEdition.tenantCode,
   };
 }
