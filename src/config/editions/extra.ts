@@ -2,13 +2,18 @@
  * 客户仓注入槽位（客户聚合仓模式 · 2026-09）.
  *
  * 独立仓库（无客户仓）：占位（空数组），行为与通用版完全一致；
- * 客户仓 deploy:prepare 会覆盖本文件注入 EXTRA_TABS / EXTRA_HIDDEN / BRAND / API_BASE / PRIMARY_COLOR。
+ * 客户仓 deploy:prepare 会覆盖本文件注入 EXTRA_TABS / EXTRA_HIDDEN / BRAND / PORTAL / API_BASE / PRIMARY_COLOR。
  *
- * 类型契约：ClientTab / BrandConfig 来自 @lieshoucloud/core-web（共享，禁止客户仓重新定义）。
+ * 类型契约：ClientTab / BrandConfig 来自 @lieshoucloud/core-web；EditionPortal 来自 contract-types
+ * （共享，禁止客户仓重新定义）。
  */
 import type { ClientTab, BrandConfig } from "@lieshoucloud/core-web";
+import type { EditionPortal } from "@lieshoucloud/contract-types";
 
 export type { ClientTab, BrandConfig };
+
+/** 门户页内容占位（客户仓 prepare 注入 PORTAL；generic 回落端默认） */
+export const PORTAL: EditionPortal | undefined = undefined;
 
 export const EXTRA_TABS: ClientTab[] = [];
 
